@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/background"
-            android:text="Kassenrechner"
+            android:text="@string/kassenrechner_menubtn"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/background"
-            android:text="AutoPublisher"
+            android:text="@string/autopublisher_menubtn"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/secondary"
-            android:text="future functionality"
+            android:text="@string/future_functionality_menubtn"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -54,7 +54,7 @@
             android:autoLink="web"
             android:backgroundTint="@color/background"
             android:linksClickable="true"
-            android:text="Made (with love) by OB"
+            android:text="@string/made_with_love__menubtn"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
@@ -68,6 +68,7 @@
         app:layout_constraintBottom_toTopOf="@id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/logo_content_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
