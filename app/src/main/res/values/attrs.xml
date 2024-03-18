@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="textColor" format="reference|color"/>
+    <attr name="textColor_light" format="reference|color"/>
+    <attr name="accentColor" format="reference|color"/>
+    <attr name="accentColor_dark" format="reference|color"/>
+    <attr name="backgroundColor" format="reference|color"/>
+    <attr name="backgroundColor_light" format="reference|color"/>
+    <attr name="launcherIconBackgroundColor" format="reference|color"/>
+</resources>

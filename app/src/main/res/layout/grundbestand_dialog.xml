@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?backgroundColor"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Grundbestand ändern"
+        android:textColor="?textColor"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/newGrundbestand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:backgroundTint="?accentColor_dark"
+        android:hint="Grundbestand"
+        android:inputType="numberDecimal"
+        android:textColor="?textColor"
+        android:textColorHint="?accentColor_dark" />
+</LinearLayout>

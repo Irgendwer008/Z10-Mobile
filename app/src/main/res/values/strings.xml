@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Z10 Mobile</string>
+    <string name="not_enough_for_base_level">Gewinn \u2264 0€!!</string>
+    <string name="after145String">%1$s€</string>
+    <string name="totalString">%1$s€</string>
+    <string name="changeMoneyErrorString">Achtung, Grundbestand != %1$s€!!</string>
+    <string name="totalTextString">Gesamt: </string>
+    <string name="minusBaseString">Gesamt \n-%1$s€:</string>
+    <string name="baseCashString">Grund-\nbestand:</string>
+    <string name="settingsTitle">Einstellungen</string>
+    <string name="showSmall">1ct - 5ct</string>
+    <string name="showBig">100€ - 500€</string>
+</resources>

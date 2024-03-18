@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeOverlay.MySwitch" parent="">
+        <item name="android:colorControlActivated">?accentColor</item>
+        <item name="android:colorForeground">?backgroundColor_light</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">?backgroundColor</item>
+        <item name="android:textColorAlertDialogListItem">@color/white</item>
+    </style>
+</resources>

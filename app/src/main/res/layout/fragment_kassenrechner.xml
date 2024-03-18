@@ -1,0 +1,1020 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Kassenrechner">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="?accentColor">
+
+            <Button
+                android:id="@+id/grundbestand_btn"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                app:icon="@android:drawable/stat_sys_download"
+                app:iconTint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="#2FFF" />
+
+            <TextView
+                android:id="@+id/titletv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- Kassenrechner"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/clear"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                app:icon="@android:drawable/stat_notify_sync_noanim"
+                app:iconTint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="#2FFF" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="-10dp"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher_foreground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/titletv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/footer"
+            android:layout_below="@+id/header"
+            android:background="?backgroundColor">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?backgroundColor">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <Switch
+                        android:id="@+id/switch1"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="?backgroundColor"
+                        android:checked="true"
+                        android:text="@string/showSmall"
+                        android:textAlignment="center"
+                        android:textColor="?textColor"
+                        android:textSize="16sp"
+                        android:theme="@style/ThemeOverlay.MySwitch"
+                        android:thumbTint="?accentColor"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <Switch
+                        android:id="@+id/switch2"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="?backgroundColor"
+                        android:checked="true"
+                        android:text="@string/showBig"
+                        android:textAlignment="center"
+                        android:textColor="?textColor"
+                        android:textSize="16sp"
+                        android:theme="@style/ThemeOverlay.MySwitch"
+                        android:thumbTint="?accentColor"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:backgroundTint="@color/secondary"
+                    android:backgroundTintMode="src_in"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ct1box"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/ct1tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="1 ct:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                        <EditText
+                            android:id="@+id/ct1num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 1-Cent-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@+id/ct1tv"
+                            tools:layout_editor_absoluteY="1dp" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ct2box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/ct2tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="2 ct:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <EditText
+                            android:id="@+id/ct2num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 2-Cent-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/ct2tv" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ct5box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/ct5tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="5 ct:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <EditText
+                            android:id="@+id/ct5num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 5-Cent-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/ct5tv" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ct10box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/ct10num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 10-Cent-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/ct10tv" />
+
+                        <TextView
+                            android:id="@+id/ct10tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="10 ct:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ct20box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/ct20tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="20 ct:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <EditText
+                            android:id="@+id/ct20num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 20-Cent-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/ct20tv" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ct50box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/ct50tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="50 ct:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <EditText
+                            android:id="@+id/ct50num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 50-Cent-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/ct50tv" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur1box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur1num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 1-Euro-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur1tv" />
+
+                        <TextView
+                            android:id="@+id/eur1tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="1€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.5" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur2box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur2num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 2-Euro-Münzen"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur2tv" />
+
+                        <TextView
+                            android:id="@+id/eur2tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="2€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur5box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur5num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 5-Euro-Scheine"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur5tv" />
+
+                        <TextView
+                            android:id="@+id/eur5tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="5€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.5" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur10box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur10num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 10-Euro-Scheine"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur10tv" />
+
+                        <TextView
+                            android:id="@+id/eur10tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="10€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur20box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur20num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 20-Euro-Scheine"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur20tv"
+                            tools:layout_editor_absoluteY="0dp" />
+
+                        <TextView
+                            android:id="@+id/eur20tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="20€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur50box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur50num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 50-Euro-Scheine"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur50tv" />
+
+                        <TextView
+                            android:id="@+id/eur50tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="50€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur100box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur100num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 100-Euro-Scheine"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur100tv" />
+
+                        <TextView
+                            android:id="@+id/eur100tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="100€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur200box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur200num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 200-Euro-Scheine"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur200tv" />
+
+                        <TextView
+                            android:id="@+id/eur200tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="200€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/eur500box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/eur500num"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/middle_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Anzahl der 500-Euro-Scheine"
+                            android:inputType="number"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/eur500tv" />
+
+                        <TextView
+                            android:id="@+id/eur500tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="500€:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="#FFFFFF"
+                        android:backgroundTint="@color/background_light"
+                        android:backgroundTintMode="src_in"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/solltv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/left_margin"
+                            android:backgroundTint="?accentColor_dark"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:text="Soll:"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <EditText
+                            android:id="@+id/sollnum"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:backgroundTint="?accentColor_dark"
+                            android:ems="10"
+                            android:hint="Bar-Sollwert laut ReKa"
+                            android:inputType="numberDecimal"
+                            android:scrollbarThumbHorizontal="?accentColor"
+                            android:scrollbarThumbVertical="?accentColor"
+                            android:singleLine="true"
+                            android:textColor="?textColor"
+                            android:textColorHighlight="?accentColor"
+                            android:textColorHint="?accentColor_dark"
+                            android:textColorLink="?accentColor_dark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/solltv" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?backgroundColor">
+
+            <Button
+                android:id="@+id/clear2"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                app:icon="@android:drawable/stat_notify_sync_noanim"
+                app:iconTint="@color/secondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="#2F60" />
+
+            <TextView
+                android:id="@+id/totaltv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="-80dp"
+                android:text="@string/totalTextString"
+                android:textColor="?textColor"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/totalnum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="0.00 €"
+                android:textColor="?textColor"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/totaltv"
+                app:layout_constraintEnd_toStartOf="@+id/clear2"
+                app:layout_constraintStart_toEndOf="@+id/totaltv"
+                app:layout_constraintTop_toTopOf="@+id/totaltv" />
+
+            <TextView
+                android:id="@+id/after145tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/minusBaseString"
+                android:textColor="?textColor"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/totaltv"
+                app:layout_constraintTop_toBottomOf="@+id/totaltv" />
+
+            <TextView
+                android:id="@+id/after145num"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0.00 €"
+                android:textColor="?textColor"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/after145tv"
+                app:layout_constraintEnd_toEndOf="@+id/totalnum"
+                app:layout_constraintStart_toStartOf="@+id/totalnum"
+                app:layout_constraintTop_toTopOf="@+id/after145tv" />
+
+            <TextView
+                android:id="@+id/changetv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/baseCashString"
+                android:textColor="?textColor"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/after145tv"
+                app:layout_constraintTop_toBottomOf="@+id/after145tv" />
+
+            <TextView
+                android:id="@+id/changenum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="?textColor"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/after145num"
+                app:layout_constraintStart_toStartOf="@+id/after145num"
+                app:layout_constraintTop_toTopOf="@+id/changetv" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#FFFFFF"
+                android:backgroundTint="@color/secondary"
+                android:backgroundTintMode="src_in"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

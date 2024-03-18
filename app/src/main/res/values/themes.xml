@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Z10Mobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="textColor">@color/white</item>
+        <item name="textColor_light">@color/light_grey</item>
+        <item name="accentColor">@color/accent</item>
+        <item name="accentColor_dark">@color/secondary</item>
+        <item name="backgroundColor">@color/background</item>
+        <item name="backgroundColor_light">@color/background_light</item>
+        <item name="android:statusBarColor">@color/accent</item>
+        <item name="launcherIconBackgroundColor">@color/launcherIconBackgroundColor</item>
+        <item name="android:colorAccent">?accentColor</item>
+    </style>
+</resources>
