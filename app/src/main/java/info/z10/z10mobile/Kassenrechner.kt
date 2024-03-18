@@ -298,7 +298,7 @@ class Kassenrechner : Fragment() {
 
         fun showGrundbestandUpdateDialog() {
             val builder = AlertDialog.Builder(context, style.AlertDialogCustom)
-            val dialogView = layoutInflater.inflate(layout.grundbestand_dialog, null);
+            val dialogView = layoutInflater.inflate(layout.grundbestand_dialog, null)
 
             @Suppress("DEPRECATION")
             builder.setView(dialogView)
