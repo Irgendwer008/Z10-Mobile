@@ -1,5 +1,9 @@
 package info.z10.z10mobile
 
+import GoogleDriveUpload
+import android.Manifest
+import android.content.pm.PackageManager
+
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -13,10 +17,14 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 
 class AutoPublisher : Fragment() {
+
+    lateinit var image: Bitmap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +39,9 @@ class AutoPublisher : Fragment() {
 
         var uri: Uri? = null
 
+        //
         // Image Selection
+        //
 
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { newUri ->
             if (newUri != null) {
@@ -42,7 +52,7 @@ class AutoPublisher : Fragment() {
 
                 uri = newUri
 
-                val image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireActivity().contentResolver, uri!!))
+                image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireActivity().contentResolver, uri!!))
 
                 if (image.byteCount < 100 * 1024 * 1024) { // 100MB, otherwise RuntimeError occurs with large images
                     contentIV.setImageURI(uri)
@@ -54,74 +64,32 @@ class AutoPublisher : Fragment() {
                 }
             }
         }
+
+        requestWriteExternalStoragePermission()
+
+        // Select Image onClickListener
         selectImageBtn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+        publishBtn.setOnClickListener { GoogleDriveUpload(requireContext(), image) }
 
-
-
-        // Include only one of the following calls to launch(), depending on the types
-        // of media that you want to let the user choose from.
-
-        // Launch the photo picker and let the user choose images and videos.
-
-        /*
-
-        // getExternalFilesDir() + "/Pictures" should match the declaration in fileprovider.xml paths
-        val file = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png")
-
-        // wrap File object into a content provider. NOTE: authority here should match authority in manifest declaration
-        val bmpUri = context?.let { FileProvider.getUriForFile(it, "com.codepath.fileprovider", file) }
-
-        val intent = Intent().apply {
-            this.action = Intent.ACTION_SEND
-            this.putExtra(Intent.EXTRA_STREAM, bmpUri)
-            this.type = "image/jpeg"
-        }
-        requireContext().startActivity(Intent.createChooser(intent, "awdawd"))
-
-        Log.d("afewfawsf", bmpUri.toString())
-
-         */
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        // Sharing to Instagram via Intent:
-        // Docs: https://developers.facebook.com/docs/instagram/sharing-to-stories/
-
-        // Instantiate an intent
-        val intent = Intent("com.instagram.share.ADD_TO_STORY")
-
-        // Attach your App ID to the intent
-        val sourceApplication = R.string.facebook_app_ID // This is your application's FB ID
-
-        intent.putExtra("source_application", sourceApplication)
-
-        // Attach your image to the intent from a URI
-        val backgroundAssetUri = Uri.parse("your-image-asset-uri-goes-here")
-        intent.setDataAndType(backgroundAssetUri, MEDIA_TYPE_JPEG)
-
-        // Grant URI permissions for the image
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-        // Instantiate an activity
-        val activity: Activity? = activity
-
-        // Verify that the activity resolves the intent and start it
-        if (activity!!.packageManager.resolveActivity(intent, 0) != null) {
-            activity!!.startActivityForResult(intent, 0)
-        }*/
 
         return view
     }
-}
 
+
+    private fun requestWriteExternalStoragePermission() {
+        var REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_WRITE_EXTERNAL_STORAGE
+            )
+        }
+    }
+}
 
