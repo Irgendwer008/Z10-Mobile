@@ -44,20 +44,17 @@ class AutoPublisher : Fragment() {
 
                 val image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireActivity().contentResolver, uri!!))
 
-                if (image.byteCount >= 100 * 1024 * 1024) { // 100MB, otherwise RuntimeError occurs with large images
-                    val w = image.width
-                    val h = image.height
-                    val aspRat = w / h
+                if (image.byteCount < 100 * 1024 * 1024) { // 100MB, otherwise RuntimeError occurs with large images
+                    contentIV.setImageURI(uri)
+                } else {
+                    val aspRat = image.width / image.height
                     val w2 = Resources.getSystem().displayMetrics.widthPixels
                     val h2 = w2 * aspRat
-
                     contentIV.setImageBitmap(Bitmap.createScaledBitmap(image, w2, h2, false))
-                } else {
-                    contentIV.setImageURI(uri)
                 }
             }
         }
-        selectImageBtn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)) }
+        selectImageBtn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
 
 
 
