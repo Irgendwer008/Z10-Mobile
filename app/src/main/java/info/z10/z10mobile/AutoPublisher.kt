@@ -1,7 +1,11 @@
 package info.z10.z10mobile
 
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,24 +25,39 @@ class AutoPublisher : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_autopublisher, container, false)
 
-        val content_iv = view.findViewById<ImageView>(R.id.imageView)
-        val select_image_btn = view.findViewById<Button>(R.id.select_image_btn)
-        //val publish_btn = view.findViewById<Button>(R.id.publish_btn)
+        val contentIV = view.findViewById<ImageView>(R.id.imageView)
+        val selectImageBtn = view.findViewById<Button>(R.id.select_image_btn)
+        val publishBtn = view.findViewById<Button>(R.id.publish_btn)
 
+        var uri: Uri? = null
 
-        // Registers a photo picker activity launcher in single-select mode.
-        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            // Callback is invoked after the user selects a media item or closes the
-            // photo picker.
-            if (uri != null) {
-                Log.d("PhotoPicker", "Selected URI: $uri")
-                content_iv.setImageURI(uri)
-            } else {
-                Log.d("PhotoPicker", "No media selected")
+        // Image Selection
+
+        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { newUri ->
+            if (newUri != null) {
+                if (uri == null) {
+                    publishBtn.isEnabled = true
+                    publishBtn.setBackgroundColor(resources.getColor(R.color.accent, ContextThemeWrapper(requireContext(), R.style.Theme_Z10Mobile).theme))
+                }
+
+                uri = newUri
+
+                val image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireActivity().contentResolver, uri!!))
+
+                if (image.byteCount >= 100 * 1024 * 1024) { // 100MB, otherwise RuntimeError occurs with large images
+                    val w = image.width
+                    val h = image.height
+                    val aspRat = w / h
+                    val w2 = Resources.getSystem().displayMetrics.widthPixels
+                    val h2 = w2 * aspRat
+
+                    contentIV.setImageBitmap(Bitmap.createScaledBitmap(image, w2, h2, false))
+                } else {
+                    contentIV.setImageURI(uri)
+                }
             }
         }
-
-        select_image_btn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)) }
+        selectImageBtn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)) }
 
 
 
