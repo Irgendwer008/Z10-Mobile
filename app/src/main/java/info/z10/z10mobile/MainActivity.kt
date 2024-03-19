@@ -2,13 +2,11 @@ package info.z10.z10mobile
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import java.lang.Exception
@@ -41,7 +39,7 @@ class Money(val value: Double, private val numInt: Int, private val boxInt: Int,
     }
 
     fun updateTotalCount() {
-        var str = this.num.text.toString()
+        val str = this.num.text.toString()
 
         totalCount = if (str == "") {
             0
@@ -63,18 +61,6 @@ class Money(val value: Double, private val numInt: Int, private val boxInt: Int,
     fun stillSomeLeft(): Boolean {
         return this.currentCount < this.totalCount
     }
-
-    fun howManyToReplaceOneWith(instance: Money): IntArray {
-        var amountOfResultMoney = 1
-        while ( (amountOfResultMoney * instance.value) % this.value != 0.0 ) {
-            amountOfResultMoney++
-        }
-        return intArrayOf(amountOfResultMoney, (amountOfResultMoney * instance.value / this.value).toInt())
-    }
-
-    fun getCurrentWorth(): Double {
-        return this.value * this.currentCount
-    }
 }
 
 fun formatMoney(double: Double): String {
@@ -94,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         if (persistingStorage?.getBoolean("firstrun", true) == true) {
             showMaintenanceWarning()
-            persistingStorage.edit()?.putBoolean("firstrun", false)?.apply();
+            persistingStorage.edit()?.putBoolean("firstrun", false)?.apply()
         }
 
         Money(0.01, R.id.ct1num, R.id.ct1box, persistingStorage)
@@ -115,6 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showMaintenanceWarning() {
+        @Suppress("DEPRECATION")
         AlertDialog.Builder(this, R.style.AlertDialogCustom)
             .setTitle(Html.fromHtml("<font color='#FF7600'>Info</font>"))
             .setMessage("Diese \"App\" befindet sich noch in der Entwicklung, es ist also ganz sicher noch nicht alles Perfekt. Solltest du beim Benutzen einen Fehler bemerken sag mir trotzdem gerne bescheid :)")
