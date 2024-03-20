@@ -14,7 +14,8 @@ import android.widget.ImageView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class AutoPublisher : Fragment() {
 
@@ -55,6 +56,15 @@ class AutoPublisher : Fragment() {
             }
         }
         selectImageBtn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+        publishBtn.setOnClickListener {
+            lifecycleScope.launch {
+                AutoPublisher_GraphAPIHelper.publish("Test_caption_lol")
+            }
+
+            //GlobalScope.launch(Dispatchers.Main) {
+            //    AutoPublisher_GraphAPIHelper.publish(requireContext(), "Test_caption_lol")
+            //}
+        }
 
 
 
