@@ -1,9 +1,5 @@
 package info.z10.z10mobile
 
-import GoogleDriveUpload
-import android.Manifest
-import android.content.pm.PackageManager
-
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -17,19 +13,23 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import info.z10.z10mobile.ImageHelper.Companion.requestWriteExternalStoragePermission
 
 
-class AutoPublisher : Fragment() {
+class AutoPublisher() : Fragment() {
 
-    lateinit var image: Bitmap
+    private lateinit var image: Bitmap
+    private var uri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val drive = GoogleDriveUpload(requireContext(), requireActivity(), this)
+        drive.requestSignIn()
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_autopublisher, container, false)
 
@@ -37,12 +37,9 @@ class AutoPublisher : Fragment() {
         val selectImageBtn = view.findViewById<Button>(R.id.select_image_btn)
         val publishBtn = view.findViewById<Button>(R.id.publish_btn)
 
-        var uri: Uri? = null
-
         //
         // Image Selection
         //
-
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { newUri ->
             if (newUri != null) {
                 if (uri == null) {
@@ -65,31 +62,17 @@ class AutoPublisher : Fragment() {
             }
         }
 
-        requestWriteExternalStoragePermission()
+        requestWriteExternalStoragePermission(requireActivity(), requireContext())
+
+
 
         // Select Image onClickListener
         selectImageBtn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
-        publishBtn.setOnClickListener { GoogleDriveUpload(requireContext(), image) }
-
+        publishBtn.setOnClickListener {
+            drive.uploadFile(uri.toString())
+        }
 
         return view
-    }
-
-
-    private fun requestWriteExternalStoragePermission() {
-        var REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_WRITE_EXTERNAL_STORAGE
-            )
-        }
     }
 }
 
