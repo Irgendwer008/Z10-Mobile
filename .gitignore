@@ -14,3 +14,6 @@
 .cxx
 local.properties
 /app/src/main/res/values/API-Credentials.xml
+/app/src/main/java/info/z10/z10mobile/Credentials.kt
+/app/debug/app-debug.apk
+/app/debug/output-metadata.json
