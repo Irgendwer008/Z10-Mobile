@@ -19,7 +19,7 @@ import java.io.IOException
 
 class AutoPublisher_ImageHelper(fragment: Fragment, view: View, buttonArray: Array<Button>) {
 
-    private val fragment = fragment
+    private val fragmnt = fragment
 
     private val contentIV: ImageView = view.findViewById(R.id.imageView)
 
@@ -55,9 +55,9 @@ class AutoPublisher_ImageHelper(fragment: Fragment, view: View, buttonArray: Arr
         // For converting everything to jpeg
         // From https://stackoverflow.com/questions/33222918/sharing-bitmap-via-android-intent
 
-        val image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(fragment.requireActivity().contentResolver, AutoPublisher.uri!!))
+        val image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(fragmnt.requireActivity().contentResolver, AutoPublisher.uri!!))
 
-        val imagesFolder: File = File(fragment.requireContext().cacheDir, "images")
+        val imagesFolder: File = File(fragmnt.requireContext().cacheDir, "images")
         var jpgUri: Uri? = null
         try {
             imagesFolder.mkdirs()
@@ -66,7 +66,7 @@ class AutoPublisher_ImageHelper(fragment: Fragment, view: View, buttonArray: Arr
             image.compress(Bitmap.CompressFormat.JPEG, 90, stream)
             stream.flush()
             stream.close()
-            jpgUri = FileProvider.getUriForFile(fragment.requireContext(), "info.z10.z10mobile.fileprovider", file)
+            jpgUri = FileProvider.getUriForFile(fragmnt.requireContext(), "info.z10.z10mobile.fileprovider", file)
         } catch (e: IOException) {
             Log.e("TAAAAAAAAAAG", "IOException while trying to write file for sharing: " + e.message)
         }

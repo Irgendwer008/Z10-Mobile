@@ -22,9 +22,9 @@ class AutoPublisher : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_autopublisher, container, false)
 
-        val publishButtonArray = arrayOf(
-            view.findViewById<Button>(R.id.instaStory_btn),
-            view.findViewById<Button>(R.id.instaFeed_btn)
+        val publishButtonArray = arrayOf<Button>(
+            view.findViewById(R.id.instaStory_btn),
+            view.findViewById(R.id.instaFeed_btn)
         )
 
 
@@ -42,15 +42,17 @@ class AutoPublisher : Fragment() {
         //
 
         // Insta Story Intent
-        view.findViewById<Button>(R.id.instaStory_btn).setOnClickListener { shareViaIntent(Intent.ACTION_SEND) } // "com.instagram.share.ADD_TO_STORY"
+        view.findViewById<Button>(R.id.instaStory_btn).setOnClickListener { shareViaIntent() } // "com.instagram.share.ADD_TO_STORY"
 
         // Insta Feed Intent
-        view.findViewById<Button>(R.id.instaFeed_btn).setOnClickListener { shareViaIntent(Intent.ACTION_SEND) } // "com.instagram.share.ADD_TO_FEED"
+        view.findViewById<Button>(R.id.instaFeed_btn).setOnClickListener { shareViaIntent() } // "com.instagram.share.ADD_TO_FEED"
 
         return view
     }
 
-    private fun shareViaIntent(intentAction: String) {
+    private fun shareViaIntent() {
+
+        val intentAction = Intent.ACTION_SEND
 
         val targetedShareIntents = ArrayList<Intent>()
         val shareIntent = Intent(intentAction)//Intent.ACTION_SEND)
