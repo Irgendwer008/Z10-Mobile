@@ -71,15 +71,57 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/select_image_btn"
+                android:id="@+id/select_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="12dp"
                 android:backgroundTint="@color/accent"
                 android:text="Select Image"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+            <Button
+                android:id="@+id/instaStory_btn"
+                android:backgroundTint="@color/background_light"
+                android:enabled="false"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Share to Instagram Story"
+                app:layout_constraintEnd_toStartOf="@+id/instaStory_cb"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/select_btn" />
+
+            <CheckBox
+                android:id="@+id/instaStory_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                app:layout_constraintBottom_toBottomOf="@+id/instaStory_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/instaStory_btn" />
+
+            <Button
+                android:id="@+id/instaFeed_btn"
+                android:backgroundTint="@color/background_light"
+                android:enabled="false"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Share to Instagram Feed"
+                app:layout_constraintEnd_toStartOf="@+id/instaStory_cb"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/instaStory_btn" />
+
+            <CheckBox
+                android:id="@+id/instaFeed_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                app:layout_constraintBottom_toBottomOf="@+id/instaFeed_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/instaFeed_btn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -91,24 +133,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?backgroundColor">
-
-        <Button
-            android:id="@+id/publish_btn"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/background_light"
-            android:enabled="false"
-            android:text="@string/publish_btn"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/divider2"
