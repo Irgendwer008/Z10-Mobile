@@ -91,8 +91,9 @@ class AutoPublisher : Fragment() {
 
         }
 
-        /* for converting everything to jpeg
-
+        /*
+        // For converting everything to jpeg
+        // From https://stackoverflow.com/questions/33222918/sharing-bitmap-via-android-intent
 
         val image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireActivity().contentResolver, uri!!))
 
