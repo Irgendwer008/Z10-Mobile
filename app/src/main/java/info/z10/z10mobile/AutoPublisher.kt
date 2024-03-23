@@ -88,6 +88,7 @@ class AutoPublisher : Fragment() {
                     startActivity(chooserIntent)
                 }
 
+
         }
 
         /* for converting everything to jpeg
@@ -112,5 +113,3 @@ class AutoPublisher : Fragment() {
         return view
     }
 }
-
-
