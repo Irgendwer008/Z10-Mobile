@@ -1,10 +1,12 @@
 package info.z10.z10mobile
 
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +16,6 @@ import android.widget.ImageView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 
 class AutoPublisher : Fragment() {
 
@@ -57,81 +57,59 @@ class AutoPublisher : Fragment() {
         }
         selectImageBtn.setOnClickListener { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
         publishBtn.setOnClickListener {
-            lifecycleScope.launch {
-                AutoPublisher_GraphAPIHelper.publish("Test_caption_lol")
-            }
 
-            //GlobalScope.launch(Dispatchers.Main) {
-            //    AutoPublisher_GraphAPIHelper.publish(requireContext(), "Test_caption_lol")
-            //}
+
+            val targetedShareIntents = ArrayList<Intent>()
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.setType("image/*")
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                val resInfo = requireActivity().packageManager.queryIntentActivities(shareIntent, 0)
+                if (!resInfo.isEmpty()) {
+
+                    val packageName = "com.instagram.android" //"com.facebook.pages.app"
+                    val targetedShareIntent = Intent(Intent.ACTION_SEND)
+                    targetedShareIntent.setType("image/*")
+                    targetedShareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                    targetedShareIntent.setPackage(packageName)
+                    targetedShareIntents.add(targetedShareIntent)
+
+                    val chooserIntent = Intent.createChooser(
+                        targetedShareIntents.removeAt(0),
+                        "Share"
+                    )
+                    chooserIntent.putExtra(
+                        Intent.EXTRA_INITIAL_INTENTS,
+                        targetedShareIntents.toArray(
+                            arrayOfNulls<Parcelable>(
+                                targetedShareIntents.size
+                            )
+                        )
+                    )
+                    startActivity(chooserIntent)
+                }
+
+
         }
 
+        /* for converting everything to jpeg
 
 
-        // Include only one of the following calls to launch(), depending on the types
-        // of media that you want to let the user choose from.
+        val image = ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireActivity().contentResolver, uri!!))
 
-        // Launch the photo picker and let the user choose images and videos.
-
-        /*
-
-        // getExternalFilesDir() + "/Pictures" should match the declaration in fileprovider.xml paths
-        val file = File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png")
-
-        // wrap File object into a content provider. NOTE: authority here should match authority in manifest declaration
-        val bmpUri = context?.let { FileProvider.getUriForFile(it, "com.codepath.fileprovider", file) }
-
-        val intent = Intent().apply {
-            this.action = Intent.ACTION_SEND
-            this.putExtra(Intent.EXTRA_STREAM, bmpUri)
-            this.type = "image/jpeg"
+        val imagesFolder: File = File(requireContext().cacheDir, "images")
+        var jpgUri: Uri? = null
+        try {
+            imagesFolder.mkdirs()
+            val file = File(imagesFolder, "shared_image.png")
+            val stream = FileOutputStream(file)
+            image.compress(Bitmap.CompressFormat.JPEG, 90, stream)
+            stream.flush()
+            stream.close()
+            jpgUri = FileProvider.getUriForFile(requireContext(), "info.z10.z10mobile.fileprovider", file)
+        } catch (e: IOException) {
+            Log.d("TAAAAAAAAAAG", "IOException while trying to write file for sharing: " + e.message)
         }
-        requireContext().startActivity(Intent.createChooser(intent, "awdawd"))
-
-        Log.d("afewfawsf", bmpUri.toString())
-
          */
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        // Sharing to Instagram via Intent:
-        // Docs: https://developers.facebook.com/docs/instagram/sharing-to-stories/
-
-        // Instantiate an intent
-        val intent = Intent("com.instagram.share.ADD_TO_STORY")
-
-        // Attach your App ID to the intent
-        val sourceApplication = R.string.facebook_app_ID // This is your application's FB ID
-
-        intent.putExtra("source_application", sourceApplication)
-
-        // Attach your image to the intent from a URI
-        val backgroundAssetUri = Uri.parse("your-image-asset-uri-goes-here")
-        intent.setDataAndType(backgroundAssetUri, MEDIA_TYPE_JPEG)
-
-        // Grant URI permissions for the image
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-        // Instantiate an activity
-        val activity: Activity? = activity
-
-        // Verify that the activity resolves the intent and start it
-        if (activity!!.packageManager.resolveActivity(intent, 0) != null) {
-            activity!!.startActivityForResult(intent, 0)
-        }*/
-
         return view
     }
 }
-
-

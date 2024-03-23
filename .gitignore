@@ -13,7 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
-/app/src/main/res/values/API-Credentials.xml
-/app/src/main/java/info/z10/z10mobile/Credentials.kt
-/app/debug/output-metadata.json
+/app/src/main/res/values/Credentials.xml
 /app/debug/app-debug.apk
+/app/debug/output-metadata.json
