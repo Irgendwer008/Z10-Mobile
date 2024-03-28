@@ -1,19 +1,66 @@
 package info.z10.z10mobile
 
+import AutoPublisher_GMB_Helper
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 
 class AutoPublisher : Fragment() {
 
 
     companion object { var uri: Uri? = null }
+
+    private lateinit var accessToken: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestIdToken(getString(R.string.googleWebClientID))
+            .build()
+
+        val signInLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                Log.e("AAAAAA", result.toString())
+                if (result.resultCode == RESULT_OK) {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    handleSignInResult(task)
+                } else {
+                    Log.e("AWWWWWWW", "Not successful, Sign in failed")
+                }
+            }
+
+        val googleSignInClient = GoogleSignIn.getClient(this.requireActivity(), signInOptions)
+        val signInIntent = googleSignInClient.signInIntent
+
+        signInLauncher.launch(signInIntent)
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            // Signed in successfully, get the access token
+            val account = completedTask.getResult(ApiException::class.java)
+            accessToken = account?.idToken!!
+
+        } catch (e: ApiException) {
+            Log.e("WAAAAAAAAAAAA", "Not successful, Sign in failed: \n\n" + e.printStackTrace())
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +71,8 @@ class AutoPublisher : Fragment() {
 
         val publishButtonArray = arrayOf<Button>(
             view.findViewById(R.id.instaStory_btn),
-            view.findViewById(R.id.instaFeed_btn)
+            view.findViewById(R.id.instaFeed_btn),
+            view.findViewById(R.id.googleMyBusiness_btn)
         )
 
 
@@ -41,11 +89,16 @@ class AutoPublisher : Fragment() {
         // Publishing
         //
 
-        // Insta Story Intent
+        // Insta Story
         view.findViewById<Button>(R.id.instaStory_btn).setOnClickListener { shareViaIntent() } // "com.instagram.share.ADD_TO_STORY"
 
-        // Insta Feed Intent
+        // Insta Feed
         view.findViewById<Button>(R.id.instaFeed_btn).setOnClickListener { shareViaIntent() } // "com.instagram.share.ADD_TO_FEED"
+
+        // Google My Business Post
+        view.findViewById<Button>(R.id.googleMyBusiness_btn).setOnClickListener { AutoPublisher_GMB_Helper(accessToken, getString(R.string.googleClientID)).createPost(getString(R.string.googleLocationID), "Test-Event", "This is a test event", "https://cloud.z10.whka.de/s/YNwB3JNtRWa4cpt/download?path=&files=") }
+
+
 
         return view
     }
