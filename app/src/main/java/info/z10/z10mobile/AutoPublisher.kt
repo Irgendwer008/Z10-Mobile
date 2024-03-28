@@ -24,7 +24,8 @@ class AutoPublisher : Fragment() {
 
         val publishButtonArray = arrayOf<Button>(
             view.findViewById(R.id.instaStory_btn),
-            view.findViewById(R.id.instaFeed_btn)
+            view.findViewById(R.id.instaFeed_btn),
+            view.findViewById(R.id.googleMyBusiness_btn)
         )
 
 
@@ -37,6 +38,9 @@ class AutoPublisher : Fragment() {
             imageHelper.launchImagePicker()
         }
 
+        val googleHelper = AutoPublisher_GoogleHelper(requireContext(), requireActivity(), this)
+        googleHelper.requestSignIn()
+
         //
         // Publishing
         //
@@ -46,6 +50,11 @@ class AutoPublisher : Fragment() {
 
         // Insta Feed Intent
         view.findViewById<Button>(R.id.instaFeed_btn).setOnClickListener { shareViaIntent() } // "com.instagram.share.ADD_TO_FEED"
+
+        // Insta Feed Intent
+        view.findViewById<Button>(R.id.googleMyBusiness_btn).setOnClickListener {
+            googleHelper.uploadEvent()
+        } // "com.instagram.share.ADD_TO_FEED"
 
         return view
     }

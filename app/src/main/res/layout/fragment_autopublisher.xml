@@ -105,10 +105,10 @@
 
             <Button
                 android:id="@+id/instaFeed_btn"
-                android:backgroundTint="@color/background_light"
-                android:enabled="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/background_light"
+                android:enabled="false"
                 android:text="Share to Instagram Feed"
                 app:layout_constraintEnd_toStartOf="@+id/instaStory_cb"
                 app:layout_constraintStart_toStartOf="parent"
@@ -122,6 +122,27 @@
                 app:layout_constraintBottom_toBottomOf="@+id/instaFeed_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/instaFeed_btn" />
+
+            <Button
+                android:id="@+id/googleMyBusiness_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/background_light"
+                android:enabled="false"
+                android:text="Share to Google Business (Maps)"
+                app:layout_constraintEnd_toStartOf="@+id/googleMyBusiness_cb"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/instaFeed_btn" />
+
+            <CheckBox
+                android:id="@+id/googleMyBusiness_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                app:layout_constraintBottom_toBottomOf="@+id/googleMyBusiness_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/googleMyBusiness_btn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
