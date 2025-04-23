@@ -29,15 +29,6 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/navButtonAutoPublisher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/background"
-            android:text="@string/autopublisher_menubtn"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <Button
             android:id="@+id/navButtonInventur"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
