@@ -14,8 +14,8 @@
             android:id="@+id/action_home2_to_kassenrechner"
             app:destination="@id/kassenrechner" />
         <action
-            android:id="@+id/action_home2_to_autoPublisher"
-            app:destination="@id/autoPublisher" />
+            android:id="@+id/action_home2_to_kassenrechner2"
+            app:destination="@id/inventur" />
     </fragment>
 
     <fragment
@@ -23,10 +23,9 @@
         android:name="info.z10.z10mobile.Kassenrechner"
         android:label="fragment_kassenrechner"
         tools:layout="@layout/fragment_kassenrechner" />
-
     <fragment
-        android:id="@+id/autoPublisher"
-        android:name="info.z10.z10mobile.AutoPublisher"
-        android:label="fragment_autoPublisher"
-        tools:layout="@layout/fragment_autopublisher" />
+        android:id="@+id/inventur"
+        android:name="info.z10.z10mobile.Inventur"
+        android:label="fragment_inventur"
+        tools:layout="@layout/fragment_inventur" />
 </navigation>
