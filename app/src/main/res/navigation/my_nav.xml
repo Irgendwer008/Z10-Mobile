@@ -17,6 +17,7 @@
             android:id="@+id/action_home2_to_kassenrechner2"
             app:destination="@id/inventur" />
     </fragment>
+
     <fragment
         android:id="@+id/kassenrechner"
         android:name="info.z10.z10mobile.Kassenrechner"

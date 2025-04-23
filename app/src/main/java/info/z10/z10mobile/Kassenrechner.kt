@@ -1,9 +1,9 @@
 package info.z10.z10mobile
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +24,7 @@ import java.lang.Exception
 
 class Kassenrechner : Fragment() {
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,7 +44,7 @@ class Kassenrechner : Fragment() {
         val change: TextView = view.findViewById(R.id.changenum)
         val clear: Button = view.findViewById(R.id.clear)
         val clear2: Button = view.findViewById(R.id.clear2)
-        val grundbestand_btn: Button = view.findViewById(R.id.grundbestand_btn)
+        val grundbestandBtn: Button = view.findViewById(R.id.grundbestand_btn)
 
         val sollnum: TextView = view.findViewById(R.id.sollnum)
 
@@ -67,7 +67,7 @@ class Kassenrechner : Fragment() {
             145.0
         }
 
-        var soll = 0.0
+        var soll: Double
 
         // set Switch States from sharedPreferences
         if (showSmall) {
@@ -143,12 +143,13 @@ class Kassenrechner : Fragment() {
         fun calcAfter145() {
             after145txt.text = resources.getString(string.minusBaseString, formatMoney(grundbestand))
 
-            try {
-                soll = sollnum.text.toString().toDouble()
+            soll = try {
+                sollnum.text.toString().toDouble()
             } catch (exception: Exception) {
-                soll = 0.0
+                0.0
             }
 
+            @SuppressLint("SetTextI18n")
             if (total < grundbestand) {
                 after145.text = resources.getString(string.not_enough_for_base_level)
             } else {
@@ -297,22 +298,27 @@ class Kassenrechner : Fragment() {
 
         fun showGrundbestandUpdateDialog() {
             val builder = AlertDialog.Builder(context, style.AlertDialogCustom)
-            val view = layoutInflater.inflate(layout.grundbestand_dialog, null);
+            val dialogView = layoutInflater.inflate(layout.grundbestand_dialog, null)
 
-            builder.setView(view)
-                .setPositiveButton(Html.fromHtml("<font color='#ffffff'>Übernehmen</font>"),
-                    DialogInterface.OnClickListener { _, _ ->
-                        try {
-                            grundbestand = view.findViewById<TextView>(R.id.newGrundbestand).text.toString().toDouble()
-                            persistingStorage?.edit()?.putString("grundbestand", grundbestand.toString())?.apply()
-                            calcAfter145()
-                            calcChange()
-                        } catch (_: Exception) {  }
-                    })
+            @Suppress("DEPRECATION")
+            builder.setView(dialogView)
+                .setPositiveButton(Html.fromHtml("<font color='#ffffff'>Übernehmen</font>")
+                ) { _, _ ->
+                    try {
+                        grundbestand =
+                            dialogView.findViewById<TextView>(R.id.newGrundbestand).text.toString()
+                                .toDouble()
+                        persistingStorage?.edit()
+                            ?.putString("grundbestand", grundbestand.toString())?.apply()
+                        calcAfter145()
+                        calcChange()
+                    } catch (_: Exception) {
+                    }
+                }
             builder.create().show()
         }
 
-        grundbestand_btn.setOnClickListener { showGrundbestandUpdateDialog() }
+        grundbestandBtn.setOnClickListener { showGrundbestandUpdateDialog() }
 
         return view
     }
