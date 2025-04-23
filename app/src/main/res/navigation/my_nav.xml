@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_home2_to_kassenrechner"
             app:destination="@id/kassenrechner" />
+        <action
+            android:id="@+id/action_home2_to_kassenrechner2"
+            app:destination="@id/inventur" />
     </fragment>
     <fragment
         android:id="@+id/kassenrechner"
         android:name="info.z10.z10mobile.Kassenrechner"
         android:label="fragment_kassenrechner"
         tools:layout="@layout/fragment_kassenrechner" />
+    <fragment
+        android:id="@+id/inventur"
+        android:name="info.z10.z10mobile.Inventur"
+        android:label="fragment_inventur"
+        tools:layout="@layout/fragment_inventur" />
 </navigation>

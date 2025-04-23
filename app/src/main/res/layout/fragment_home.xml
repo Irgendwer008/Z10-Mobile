@@ -28,6 +28,14 @@
             android:textColor="@color/white" />
 
         <Button
+            android:id="@+id/navButtonInventur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/background"
+            android:text="Inventur"
+            android:textColor="@color/white" />
+
+        <Button
             android:id="@+id/navButtonIdkYet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
