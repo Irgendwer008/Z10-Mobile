@@ -9,8 +9,7 @@ class AutoPublisher_GMB_Helper(private val accessToken: String, private val acco
 
     @Throws(IOException::class)
     fun createPost(locationId: String, title: String, description: String, sourceUrl: String, languageCode: String = "de-DE") {
-        val url =
-            "https://mybusiness.googleapis.com/v4/accounts/${accountID}/locations/$locationId/localPosts"
+        val url = "https://mybusiness.googleapis.com/v4/accounts/${accountID}/locations/$locationId/localPosts"
 
 
         // TODO Add date / time selection
@@ -24,7 +23,7 @@ class AutoPublisher_GMB_Helper(private val accessToken: String, private val acco
                         "startDate": {
                             "year": 2024,
                             "month": 4,
-                            "day": 2,
+                            "day": 20,
                         },
                         "startTime": {
                               "hours": 9,
@@ -35,7 +34,7 @@ class AutoPublisher_GMB_Helper(private val accessToken: String, private val acco
                         "endDate": {
                             "year": 2024,
                             "month": 4,
-                            "day": 2,
+                            "day": 20,
                         },
                         "endTime": {
                               "hours": 17,
@@ -45,13 +44,18 @@ class AutoPublisher_GMB_Helper(private val accessToken: String, private val acco
                         }
                     }
                 },
+                "callToAction": {
+                    "actionType": "LEARN_MORE",
+                    "url": "https://z10.info",
+                },
                 "media": [
                     {
                         "mediaFormat": "PHOTO",
                         "sourceUrl": "$sourceUrl",
                     }
                 ],
-                "topicType": "EVENT"
+                "topicType": "EVENT",
+                "validateOnly": "True"
             }
         """.trimIndent()
 
@@ -73,6 +77,29 @@ class AutoPublisher_GMB_Helper(private val accessToken: String, private val acco
                     println("Failed to create post: ${response.code} - ${response.message}")
                 } else {
                     println("Post created successfully.")
+                }
+            }
+        })
+    }
+
+    fun listAccounts() {
+        val url = "https://mybusinessaccountmanagement.googleapis.com/v1/accounts"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .addHeader("Authorization", "Bearer $accessToken")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to create: ${e.message}")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    println("Failed to create: ${response.code} - ${response.message}")
+                } else {
+                    println("created successfully.")
                 }
             }
         })

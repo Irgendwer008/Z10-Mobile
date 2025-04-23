@@ -17,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.Task
 
 class AutoPublisher : Fragment() {
@@ -30,8 +31,9 @@ class AutoPublisher : Fragment() {
         super.onCreate(savedInstanceState)
 
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestScopes(Scope("https://www.googleapis.com/auth/business.manage"))
             .requestEmail()
-            .requestIdToken(getString(R.string.googleWebClientID))
+            .requestIdToken(getString(R.string.googleClientID))
             .build()
 
         val signInLauncher =
@@ -56,6 +58,7 @@ class AutoPublisher : Fragment() {
             // Signed in successfully, get the access token
             val account = completedTask.getResult(ApiException::class.java)
             accessToken = account?.idToken!!
+            println(accessToken)
 
         } catch (e: ApiException) {
             Log.e("WAAAAAAAAAAAA", "Not successful, Sign in failed: \n\n" + e.printStackTrace())
@@ -63,7 +66,8 @@ class AutoPublisher : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
@@ -96,7 +100,11 @@ class AutoPublisher : Fragment() {
         view.findViewById<Button>(R.id.instaFeed_btn).setOnClickListener { shareViaIntent() } // "com.instagram.share.ADD_TO_FEED"
 
         // Google My Business Post
-        view.findViewById<Button>(R.id.googleMyBusiness_btn).setOnClickListener { AutoPublisher_GMB_Helper(accessToken, getString(R.string.googleClientID)).createPost(getString(R.string.googleLocationID), "Test-Event", "This is a test event", "https://cloud.z10.whka.de/s/YNwB3JNtRWa4cpt/download?path=&files=") }
+        view.findViewById<Button>(R.id.googleMyBusiness_btn).setOnClickListener {
+            val helper = AutoPublisher_GMB_Helper(accessToken, getString(R.string.googleAccountID))
+            //helper.listAccounts()
+            helper.createPost(getString(R.string.googleLocationID), "TestEvent", "Thisisatestevent", "https://raw.githubusercontent.com/test-images/png/main/202105/cs-black-000.png")//https://cloud.z10.whka.de/s/YNwB3JNtRWa4cpt/download?path=&files=")
+        }
 
 
 
