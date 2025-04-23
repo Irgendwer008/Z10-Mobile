@@ -205,8 +205,15 @@ class Kassenrechner : Fragment() {
                 }
             }
 
-            // add ten of 50ct-2eur
-            for (instance in money_array.subList(5, 8).reversed()) {
+            // add ten 20ct
+            for (i in 0..9) {
+                if (money_array[4].totalCount > i) {
+                    money_array[4].currentCount++
+                }
+            }
+
+            // add ten of 20ct-2eur
+            for (instance in money_array.subList(4, 8).reversed()) {
                 for (i in 0..9) {
                     if (instance.totalCount > i) {
                         instance.currentCount++
@@ -214,9 +221,9 @@ class Kassenrechner : Fragment() {
                 }
             }
 
-            // try add ten more of 50ct-2eur
+            // try add ten (more) of 10ct-2eur
             for (i in 0..9) {
-                for (instance in money_array.subList(5, 8).reversed()) {
+                for (instance in money_array.subList(3, 8).reversed()) {
                     if (instance.stillSomeLeft() && getCurrentTotalChange() <= grundbestand - instance.value) {
                         instance.currentCount++
                     }
