@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
-import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Delete
@@ -20,7 +18,6 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Relation
-import androidx.room.Junction
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Transaction
@@ -35,12 +32,18 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import info.z10.z10mobile.R.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.sql.Timestamp
-import java.util.Date
-import java.util.Dictionary
 import androidx.navigation.findNavController
+import kotlinx.coroutines.Dispatchers
 
 
+var bundleVariants = mutableListOf(
+    "Stück",
+    "Fass",
+    "Flasche",
+    "6er Kasten",
+    "20er Kasten",
+    "24er Kasten"
+)
 
 fun create_scanner(context: Context): GmsBarcodeScanner {
     val options = GmsBarcodeScannerOptions.Builder()
@@ -70,42 +73,21 @@ fun get_article_name_from_ean(context: Context, ean: String, listener: Listener<
     queue.add(stringRequest)
 }
 
-class Inventur : Fragment() {class Size(val count: Int, val litersPerCount: Double) {
-        val totalLiters: Double = count * litersPerCount
-    }
-
-    data class Bundle(val count: Int, val title: String)
-
-    val sizes: Array<Size> = arrayOf(
-        Size(1, 30.0),
-        Size(1, 50.0),
-        Size(1, 0.33),
-        Size(1, 0.5),
-        Size(1, 0.75),
-        Size(1, 1.0),
-    )
-
-    val bundles: Array<Bundle> = arrayOf(
-        Bundle(1,  "Fass"),
-        Bundle(1,  "Flasche"),
-        Bundle(20, "Kasten"),
-        Bundle(24, "Kasten")
-    )
+class Inventur : Fragment() {
 
     @Entity
     data class KnownItem(
-        @PrimaryKey(autoGenerate = true) val knownItemId: Int,
+        @PrimaryKey(autoGenerate = true) val knownItemId: Long = 0,
         val name: String,
-        val ean: Int?,
+        val ean: Long?,
     )
 
 
     @Entity
     data class AddedItem(
-        @PrimaryKey(autoGenerate = true) val addedItemId: Int,
-        val knownItemId: Int,
-        val sizeId: Int,
-        val bundlesId: Int,
+        @PrimaryKey(autoGenerate = true) val addedItemId: Long = 0,
+        val knownItemId: Long,
+        val bundleVariant: String,
     )
 
     data class KnownItemWithAddedItems(
@@ -121,48 +103,91 @@ class Inventur : Fragment() {class Size(val count: Int, val litersPerCount: Doub
     @Dao
     interface ItemDao {
         @Query("SELECT * FROM KnownItem")
-        fun getAll(): Flow<List<KnownItem>>
+        fun getAllKnownItems(): Flow<List<KnownItem>>
+
+        @Query("SELECT * FROM AddedItem")
+        fun getAllAddedItems(): Flow<List<AddedItem>>
 
         @Transaction
         @Query("SELECT * FROM KnownItem")
         fun getAddedItemsfromKnownItem(): Flow<List<KnownItemWithAddedItems>>
 
         @Insert
-        fun insertAll(vararg knownItems: KnownItem)
+        fun insertKnownItem(knownItem: KnownItem): Long
+
+        @Insert
+        fun insertAddedItem(addedItem: AddedItem): Long
 
         @Delete
         fun delete(user: KnownItem)
+
+        @Query("DELETE FROM KnownItem")
+        fun deleteAllKnownItems()
+        @Query("DELETE FROM AddedItem")
+        fun deleteAllAddedItems()
+        @Query("DELETE FROM sqlite_sequence WHERE name IN ('KnownItem', 'AddedItem')")
+        fun deletePrimaryKeyIndex()
     }
 
     @Database(entities = [KnownItem::class, AddedItem::class], version = 1)
     abstract class AppDatabase : RoomDatabase() {
-        abstract fun knownItemDao(): ItemDao
+        abstract fun itemDao(): ItemDao
+
+        companion object {
+            @Volatile
+            private var INSTANCE: AppDatabase? = null
+
+            fun getDatabase(context: Context): AppDatabase {
+                return INSTANCE ?: synchronized(this) {
+                    val instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        AppDatabase::class.java,
+                        "AppDatabase"
+                    ).build()
+                    INSTANCE = instance
+                    instance
+                }
+            }
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: android.os.Bundle?,
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(layout.fragment_inventur, container, false)
-
-        view.findViewById<Button>(R.id.addItembtn).setOnClickListener{ view.findNavController().navigate(R.id.action_inventur_to_inventur_addItem)}
 
         val db = Room.databaseBuilder(
             view.context,
             AppDatabase::class.java, "item-db"
         ).build()
 
-        val knownItemDao = db.knownItemDao()
+        view.findViewById<Button>(R.id.addItembtn).setOnClickListener{ view.findNavController().navigate(R.id.action_inventur_to_inventur_addItem)}
+        view.findViewById<Button>(R.id.clear_db).setOnClickListener{
 
-        Log.e("TEST", "AWDDD")
-
-        lifecycleScope.launch {
-            knownItemDao.getAll().collect { knownItems ->
-                for (item in knownItems) {
-                    Log.e("TEST", item.name)
+            Log.i("TEST", "Still Synchronous")
+            lifecycleScope.launch(Dispatchers.IO) {
+                db.itemDao().getAllKnownItems().collect{ knownItems ->
+                    for (item in knownItems) {
+                        Log.e("TEST", "${item.name}: ${item.ean}")
+                    }
                 }
+
+                Log.i("TEST", "Starting Deletion")
+
+                db.clearAllTables()
+                db.itemDao().deleteAllKnownItems()
+                db.itemDao().deleteAllAddedItems()
+                db.itemDao().deletePrimaryKeyIndex()
+
+                db.itemDao().getAllKnownItems().collect{ knownItems ->
+                    for (item in knownItems) {
+                        Log.e("TEST", "${item.name}: ${item.ean}")
+                    }
+                }
+                Log.i("TEST", "Done")
             }
         }
 

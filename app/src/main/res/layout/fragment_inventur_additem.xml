@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Kassenrechner">
+    tools:context=".Inventur">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -19,6 +19,19 @@
             android:layout_alignParentTop="true"
             android:background="?accentColor"
             android:minHeight="50dp">
+
+            <Button
+                android:id="@+id/scanbtn"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                app:icon="@drawable/baseline_barcode_reader_24"
+                app:iconTint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="#2FFF" />
 
             <TextView
                 android:id="@+id/titletv"
@@ -55,18 +68,15 @@
             android:layout_marginBottom="0dp"
             android:background="?backgroundColor">
 
-            <Button
-                android:id="@+id/continuebtn"
+            <TextView
+                android:id="@+id/nametv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/accent"
-                android:text="Weiter"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_marginStart="20dp"
+                android:text="Name"
+                app:layout_constraintBottom_toBottomOf="@+id/nameAutoCompletetv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/nameAutoCompletetv" />
 
             <AutoCompleteTextView
                 android:id="@+id/nameAutoCompletetv"
@@ -80,35 +90,80 @@
                 app:layout_constraintStart_toStartOf="@id/nametv"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <AutoCompleteTextView
-                android:id="@+id/eanAutoCompletetv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="EAN / UPC / etc."
-                app:layout_constraintEnd_toEndOf="@+id/nameAutoCompletetv"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/nameAutoCompletetv"
-                app:layout_constraintTop_toBottomOf="@+id/nameAutoCompletetv" />
-
             <TextView
-                android:id="@+id/nametv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:text="Name"
-                app:layout_constraintBottom_toBottomOf="@+id/nameAutoCompletetv"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/nameAutoCompletetv" />
-
-            <TextView
-                android:id="@+id/nametv2"
+                android:id="@+id/eantv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="EAN"
                 app:layout_constraintBottom_toBottomOf="@+id/eanAutoCompletetv"
                 app:layout_constraintStart_toStartOf="@+id/nametv"
                 app:layout_constraintTop_toTopOf="@+id/eanAutoCompletetv" />
+
+            <AutoCompleteTextView
+                android:id="@+id/eanAutoCompletetv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="EAN / UPC / etc."
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="@+id/nameAutoCompletetv"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/nameAutoCompletetv"
+                app:layout_constraintTop_toBottomOf="@+id/nameAutoCompletetv" />
+
+            <TextView
+                android:id="@+id/bundlevarianttv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Einheit"
+                app:layout_constraintBottom_toBottomOf="@+id/bundlevariantAutoCompletetv"
+                app:layout_constraintStart_toStartOf="@+id/nametv"
+                app:layout_constraintTop_toTopOf="@+id/bundlevariantAutoCompletetv" />
+
+            <TextView
+                android:id="@+id/counttv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anzahl"
+                app:layout_constraintBottom_toBottomOf="@+id/countet"
+                app:layout_constraintStart_toStartOf="@+id/nametv"
+                app:layout_constraintTop_toTopOf="@+id/countet" />
+
+            <AutoCompleteTextView
+                android:id="@+id/bundlevariantAutoCompletetv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Einheit"
+                app:layout_constraintEnd_toEndOf="@+id/nameAutoCompletetv"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/nameAutoCompletetv"
+                app:layout_constraintTop_toBottomOf="@+id/eanAutoCompletetv" />
+
+            <Button
+                android:id="@+id/continuebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/accent"
+                android:text="Weiter"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/countet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Anzahl"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="@+id/bundlevariantAutoCompletetv"
+                app:layout_constraintStart_toStartOf="@+id/bundlevariantAutoCompletetv"
+                app:layout_constraintTop_toBottomOf="@+id/bundlevariantAutoCompletetv" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RelativeLayout>
