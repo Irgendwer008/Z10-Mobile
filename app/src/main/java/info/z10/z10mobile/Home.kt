@@ -10,19 +10,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.core.net.toUri
 
 class Home : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        view.findViewById<Button>(R.id.navButtonRechner).setOnClickListener{Navigation.findNavController(view).navigate(R.id.action_home2_to_kassenrechner)}
-        view.findViewById<Button>(R.id.navButtonInventur).setOnClickListener{Navigation.findNavController(view).navigate(R.id.action_home2_to_inventur)}
+        view.findViewById<Button>(R.id.navButtonRechner).setOnClickListener{ view.findNavController().navigate(R.id.action_home2_to_kassenrechner)}
+        view.findViewById<Button>(R.id.navButtonInventur).setOnClickListener{ view.findNavController().navigate(R.id.action_home2_to_inventur)}
         view.findViewById<Button>(R.id.navButtonIdkYet).setOnClickListener{Toast.makeText(view.context, "69\nhaha i am so funny",Toast.LENGTH_LONG).show()}
-        view.findViewById<Button>(R.id.madeWithLoveButton).setOnClickListener{startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wiki.z10.info/w/Benutzer:Ob")))}
+        view.findViewById<Button>(R.id.madeWithLoveButton).setOnClickListener{startActivity(Intent(Intent.ACTION_VIEW, "https://wiki.z10.info/w/Benutzer:Ob".toUri()))}
 
         return view
     }

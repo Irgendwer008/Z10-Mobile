@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Kassenrechner">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="?accentColor"
+            android:minHeight="50dp">
+
+            <TextView
+                android:id="@+id/titletv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- Inventur"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="-10dp"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher_foreground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/titletv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
+            android:background="?backgroundColor">
+
+            <Button
+                android:id="@+id/continuebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/accent"
+                android:text="Weiter"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <AutoCompleteTextView
+                android:id="@+id/nameAutoCompletetv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="76dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="Name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/nametv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <AutoCompleteTextView
+                android:id="@+id/eanAutoCompletetv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="EAN / UPC / etc."
+                app:layout_constraintEnd_toEndOf="@+id/nameAutoCompletetv"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/nameAutoCompletetv"
+                app:layout_constraintTop_toBottomOf="@+id/nameAutoCompletetv" />
+
+            <TextView
+                android:id="@+id/nametv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Name"
+                app:layout_constraintBottom_toBottomOf="@+id/nameAutoCompletetv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/nameAutoCompletetv" />
+
+            <TextView
+                android:id="@+id/nametv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EAN"
+                app:layout_constraintBottom_toBottomOf="@+id/eanAutoCompletetv"
+                app:layout_constraintStart_toStartOf="@+id/nametv"
+                app:layout_constraintTop_toTopOf="@+id/eanAutoCompletetv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

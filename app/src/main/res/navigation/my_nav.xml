@@ -27,5 +27,14 @@
         android:id="@+id/inventur"
         android:name="info.z10.z10mobile.Inventur"
         android:label="fragment_inventur"
-        tools:layout="@layout/fragment_inventur" />
+        tools:layout="@layout/fragment_inventur" >
+        <action
+            android:id="@+id/action_inventur_to_inventur_addItem"
+            app:destination="@id/inventur_addItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/inventur_addItem"
+        android:name="info.z10.z10mobile.Inventur_AddItem"
+        android:label="fragment_inventur"
+        tools:layout="@layout/fragment_inventur_additem" />
 </navigation>
