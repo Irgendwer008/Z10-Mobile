@@ -2,11 +2,17 @@ package info.z10.z10mobile
 
 import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
+import androidx.core.view.children
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Dao
@@ -30,10 +36,12 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import info.z10.z10mobile.R.*
+import info.z10.z10mobile.DatabaseApplication.Companion.database as db
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 var bundleVariants = mutableListOf(
@@ -88,6 +96,7 @@ class Inventur : Fragment() {
         @PrimaryKey(autoGenerate = true) val addedItemId: Long = 0,
         val knownItemId: Long,
         val bundleVariant: String,
+        val count: Int
     )
 
     data class KnownItemWithAddedItems(
@@ -103,30 +112,29 @@ class Inventur : Fragment() {
     @Dao
     interface ItemDao {
         @Query("SELECT * FROM KnownItem")
-        fun getAllKnownItems(): Flow<List<KnownItem>>
+        suspend fun getAllKnownItems(): List<KnownItem>
 
         @Query("SELECT * FROM AddedItem")
-        fun getAllAddedItems(): Flow<List<AddedItem>>
+        suspend fun getAllAddedItems(): List<AddedItem>
 
-        @Transaction
-        @Query("SELECT * FROM KnownItem")
-        fun getAddedItemsfromKnownItem(): Flow<List<KnownItemWithAddedItems>>
-
-        @Insert
-        fun insertKnownItem(knownItem: KnownItem): Long
+        @Query("SELECT * FROM KnownItem WHERE knownItemId = :knownItemId")
+        suspend fun getKnownItem(knownItemId: Long): KnownItem
 
         @Insert
-        fun insertAddedItem(addedItem: AddedItem): Long
+        suspend fun insertKnownItem(knownItem: KnownItem): Long
+
+        @Insert
+        suspend fun insertAddedItem(addedItem: AddedItem): Long
 
         @Delete
-        fun delete(user: KnownItem)
+        suspend fun delete(user: KnownItem)
 
         @Query("DELETE FROM KnownItem")
-        fun deleteAllKnownItems()
+        suspend fun deleteAllKnownItems()
         @Query("DELETE FROM AddedItem")
-        fun deleteAllAddedItems()
+        suspend fun deleteAllAddedItems()
         @Query("DELETE FROM sqlite_sequence WHERE name IN ('KnownItem', 'AddedItem')")
-        fun deletePrimaryKeyIndex()
+        suspend fun deletePrimaryKeyIndex()
     }
 
     @Database(entities = [KnownItem::class, AddedItem::class], version = 1)
@@ -159,38 +167,64 @@ class Inventur : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(layout.fragment_inventur, container, false)
 
-        val db = Room.databaseBuilder(
-            view.context,
-            AppDatabase::class.java, "item-db"
-        ).build()
+        refresh_table(view)
 
         view.findViewById<Button>(R.id.addItembtn).setOnClickListener{ view.findNavController().navigate(R.id.action_inventur_to_inventur_addItem)}
         view.findViewById<Button>(R.id.clear_db).setOnClickListener{
-
-            Log.i("TEST", "Still Synchronous")
-            lifecycleScope.launch(Dispatchers.IO) {
-                db.itemDao().getAllKnownItems().collect{ knownItems ->
-                    for (item in knownItems) {
-                        Log.e("TEST", "${item.name}: ${item.ean}")
-                    }
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    db.clearAllTables()
+                    db.itemDao().deleteAllKnownItems()
+                    db.itemDao().deleteAllAddedItems()
+                    db.itemDao().deletePrimaryKeyIndex()
                 }
-
-                Log.i("TEST", "Starting Deletion")
-
-                db.clearAllTables()
-                db.itemDao().deleteAllKnownItems()
-                db.itemDao().deleteAllAddedItems()
-                db.itemDao().deletePrimaryKeyIndex()
-
-                db.itemDao().getAllKnownItems().collect{ knownItems ->
-                    for (item in knownItems) {
-                        Log.e("TEST", "${item.name}: ${item.ean}")
-                    }
-                }
-                Log.i("TEST", "Done")
+                refresh_table(view)
             }
         }
 
         return view
+    }
+
+    fun refresh_table(view: View) {
+
+        val table = view.findViewById<TableLayout>(R.id.addedItems_tableview)
+
+        table.removeAllViews()
+
+        lifecycleScope.launch {
+            val addedItems = db.itemDao().getAllAddedItems()
+            Log.i("DEBUG", "Added items: ${addedItems.size}")
+
+            for (addedItem in addedItems) {
+                val knownItem = db.itemDao().getKnownItem(addedItem.knownItemId)
+                Log.i("DEBUG", "Name: ${knownItem.name}, EAN: ${knownItem.ean}, KIID: ${knownItem.knownItemId}, Bundle: ${addedItem.bundleVariant}, Count: ${addedItem.count}")
+
+                withContext(Dispatchers.Main) {
+                    val row = TableRow(requireContext()).apply {
+                        layoutParams = TableLayout.LayoutParams(
+                            TableLayout.LayoutParams.MATCH_PARENT,
+                            TableLayout.LayoutParams.WRAP_CONTENT
+                        )
+                    }
+
+                    row.setPadding(5, 5, 5, 5)
+
+                    row.addView(TextView(requireContext()).apply {
+                        text = knownItem.name
+                        textSize = 20.0F
+                    })
+                    row.addView(TextView(requireContext()).apply {
+                        text = addedItem.bundleVariant
+                        textSize = 20.0F
+                    })
+                    row.addView(TextView(requireContext()).apply {
+                        text = addedItem.count.toString()
+                        textSize = 20.0F
+                    })
+
+                    table.addView(row)
+                }
+            }
+        }
     }
 }

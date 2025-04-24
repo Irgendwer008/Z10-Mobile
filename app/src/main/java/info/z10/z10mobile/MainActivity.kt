@@ -1,6 +1,7 @@
 package info.z10.z10mobile
 
 import android.app.AlertDialog
+import android.app.Application
 import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
@@ -10,6 +11,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.room.Room
+import info.z10.z10mobile.Inventur.AppDatabase
 import java.lang.Exception
 import java.text.DecimalFormat
 
@@ -79,8 +82,22 @@ fun infoDialogue(context: Context, text: String): androidx.appcompat.app.AlertDi
     return builder.create()
 }
 
-class MainActivity : AppCompatActivity() {
+class DatabaseApplication: Application() {
+    companion object {
+        lateinit var database: AppDatabase
+            private set
+    }
 
+    override fun onCreate() {
+        super.onCreate()
+
+        database = Room.databaseBuilder<AppDatabase>(
+            this, "item-db"
+        ).build()
+    }
+}
+
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)

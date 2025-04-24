@@ -14,7 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import info.z10.z10mobile.DatabaseApplication.Companion.database as db
 
 
 class Inventur_AddItem : Fragment() {
@@ -32,25 +34,23 @@ class Inventur_AddItem : Fragment() {
         val name_tv = requireView().findViewById<AutoCompleteTextView>(R.id.nameAutoCompletetv)
         val ean_tv = requireView().findViewById<AutoCompleteTextView>(R.id.eanAutoCompletetv)
 
-        val db = Inventur.AppDatabase.getDatabase(requireView().context)
-
         lifecycleScope.launch {
-            db.itemDao().getAllKnownItems().collect { knownItems ->
-                var names = mutableListOf<String>()
-                var eans = mutableListOf<Long>()
+            val knownItems = db.itemDao().getAllKnownItems()
 
-                for (item in knownItems) {
-                    names.add(item.name)
-                    item.ean?.let { eans.add(it) }
-                }
+            var names = mutableListOf<String>()
+            var eans = mutableListOf<Long>()
 
-                name_tv.setAdapter(
-                    ArrayAdapter<String>(requireView().context, android.R.layout.select_dialog_item, names)
-                )
-                ean_tv.setAdapter(
-                    ArrayAdapter<Long>(requireView().context, android.R.layout.select_dialog_item, eans)
-                )
+            for (item in knownItems) {
+                names.add(item.name)
+                item.ean?.let { eans.add(it) }
             }
+
+            name_tv.setAdapter(
+                ArrayAdapter<String>(requireView().context, android.R.layout.select_dialog_item, names)
+            )
+            ean_tv.setAdapter(
+                ArrayAdapter<Long>(requireView().context, android.R.layout.select_dialog_item, eans)
+            )
         }
     }
 
@@ -91,7 +91,7 @@ class Inventur_AddItem : Fragment() {
                                 val json = JSONObject(response) // String instance holding the above json
                                 name_tv.setText(json.getString("title"))
                             } catch (_: Exception) {
-                                Toast.makeText(this.context, "EAN barcode.displayValue konnte nicht in Onlinedatenbank gefunden werden", Toast.LENGTH_LONG).show()
+                                Toast.makeText(this.context, "EAN ${barcode.displayValue} konnte nicht in Onlinedatenbank gefunden werden", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
@@ -114,28 +114,32 @@ class Inventur_AddItem : Fragment() {
                 infoDialogue(view.context, "Name muss mindestens fünf Zeichen lang sein").show()
             } else if (bundleVariant.length < 3) {
                 infoDialogue(view.context, "Einheitsbezeichnung muss mindestens drei Zeichen lang sein").show()
+            } else if (ean.length < 4) {
+                infoDialogue(view.context, "EAN muss mindestens vier Ziffern groß sein").show()
             } else if (count.isBlank()) {
                 infoDialogue(view.context, "Bitte gib eine Anzahl an").show()
             } else {
+                lifecycleScope.launch {
+                    val already_existing_knownItems = db.itemDao().getAllKnownItems()
 
-                val db = Inventur.AppDatabase.getDatabase(view.context)
-                lifecycleScope.launch(Dispatchers.IO) {
-                    db.itemDao().getAllKnownItems().collect{ already_existing_knownItems ->
-                        var knownItemId: Long = 0
-                        var existsalready = false
-                        for (item in already_existing_knownItems) {
-                            if ((item.name == name) and (item.ean == ean.toLong())) {
-                                existsalready = true
-                                knownItemId = item.knownItemId
-                                break
-                            }
+                    var knownItemId: Long = 0
+                    var existsalready = false
+                    for (item in already_existing_knownItems) {
+                        if ((item.name == name) and (item.ean == ean.toLong())) {
+                            existsalready = true
+                            knownItemId = item.knownItemId
+                            break
                         }
-                        if (!existsalready) {
-                            knownItemId = db.itemDao()
-                                .insertKnownItem(Inventur.KnownItem(0, name, ean.toLong()))
-                        }
-                        db.itemDao().insertAddedItem(Inventur.AddedItem(0, knownItemId, bundleVariant))
+                    }
+                    if (!existsalready) {
+                        knownItemId = db.itemDao()
+                            .insertKnownItem(Inventur.KnownItem(0, name, ean.toLong()))
+                    }
+                    db.itemDao().insertAddedItem(Inventur.AddedItem(0, knownItemId, bundleVariant, count.toInt()))
 
+                    Log.i("DEBUG", name + ean + knownItemId + bundleVariant + count)
+
+                    withContext(Dispatchers.Main) {
                         name_tv.text.clear()
                         ean_tv.text.clear()
                         bundleVariant_tv.text.clear()
