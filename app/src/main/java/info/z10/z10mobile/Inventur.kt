@@ -176,7 +176,6 @@ class Inventur : Fragment() {
             }
         }
         view.findViewById<Button>(R.id.clear_db).setOnClickListener{
-            Log.d("DEBUG", "SEFFFF")
             val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             builder.setMessage("Willst du wirklich alle Einträge unwiderruflich löschen?")
             builder.setTitle("Alles Löschen")
@@ -192,7 +191,7 @@ class Inventur : Fragment() {
                 }
             })
             builder.setNeutralButton("Cancel", {_, _ -> })
-            builder.create()
+            builder.create().show()
         }
         return view
     }
