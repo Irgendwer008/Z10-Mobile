@@ -21,6 +21,20 @@
             android:minHeight="50dp">
 
             <Button
+                android:id="@+id/export_btn"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                app:icon="@drawable/baseline_share_24"
+                app:iconTint="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                app:rippleColor="#2FFF" />
+
+            <Button
                 android:id="@+id/clear_db"
                 style="@style/Widget.Material3.Button.IconButton"
                 android:layout_width="wrap_content"
@@ -29,7 +43,7 @@
                 app:icon="@android:drawable/stat_notify_sync_noanim"
                 app:iconTint="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:rippleColor="#2FFF" />
 

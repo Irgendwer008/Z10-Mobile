@@ -1,6 +1,7 @@
 package info.z10.z10mobile
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
@@ -26,7 +27,6 @@ import androidx.room.Query
 import androidx.room.Relation
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.Transaction
 import com.android.volley.Request
 import com.android.volley.Response.Listener
 import com.android.volley.toolbox.StringRequest
@@ -37,7 +37,7 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import info.z10.z10mobile.R.*
 import info.z10.z10mobile.DatabaseApplication.Companion.database as db
-import kotlinx.coroutines.flow.Flow
+import info.z10.z10mobile.Inventur_Dinge.FileHelper
 import kotlinx.coroutines.launch
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Dispatchers
@@ -170,18 +170,30 @@ class Inventur : Fragment() {
         refresh_table(view)
 
         view.findViewById<Button>(R.id.addItembtn).setOnClickListener{ view.findNavController().navigate(R.id.action_inventur_to_inventur_addItem)}
-        view.findViewById<Button>(R.id.clear_db).setOnClickListener{
+        view.findViewById<Button>(R.id.export_btn).setOnClickListener{
             lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    db.clearAllTables()
-                    db.itemDao().deleteAllKnownItems()
-                    db.itemDao().deleteAllAddedItems()
-                    db.itemDao().deletePrimaryKeyIndex()
-                }
-                refresh_table(view)
+                FileHelper().export_db(requireContext(), db)
             }
         }
-
+        view.findViewById<Button>(R.id.clear_db).setOnClickListener{
+            Log.d("DEBUG", "SEFFFF")
+            val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            builder.setMessage("Willst du wirklich alle Einträge unwiderruflich löschen?")
+            builder.setTitle("Alles Löschen")
+            builder.setPositiveButton("Ok", { _, _ ->
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        db.clearAllTables()
+                        db.itemDao().deleteAllKnownItems()
+                        db.itemDao().deleteAllAddedItems()
+                        db.itemDao().deletePrimaryKeyIndex()
+                    }
+                    refresh_table(view)
+                }
+            })
+            builder.setNeutralButton("Cancel", {_, _ -> })
+            builder.create()
+        }
         return view
     }
 
@@ -207,19 +219,23 @@ class Inventur : Fragment() {
                         )
                     }
 
-                    row.setPadding(5, 5, 5, 5)
-
                     row.addView(TextView(requireContext()).apply {
                         text = knownItem.name
                         textSize = 20.0F
+                        setBackgroundResource(R.drawable.table_border)
+                        setPadding(10, 5, 5, 5)
                     })
                     row.addView(TextView(requireContext()).apply {
                         text = addedItem.bundleVariant
                         textSize = 20.0F
+                        setBackgroundResource(R.drawable.table_border)
+                        setPadding(10, 5, 5, 5)
                     })
                     row.addView(TextView(requireContext()).apply {
                         text = addedItem.count.toString()
                         textSize = 20.0F
+                        setBackgroundResource(R.drawable.table_border)
+                        setPadding(10, 5, 5, 5)
                     })
 
                     table.addView(row)

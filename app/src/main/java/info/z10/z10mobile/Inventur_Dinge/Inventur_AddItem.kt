@@ -1,4 +1,4 @@
-package info.z10.z10mobile
+package info.z10.z10mobile.Inventur_Dinge
 
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +12,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import info.z10.z10mobile.Inventur
+import info.z10.z10mobile.R
+import info.z10.z10mobile.bundleVariants
+import info.z10.z10mobile.create_scanner
+import info.z10.z10mobile.get_article_name_from_ean
+import info.z10.z10mobile.infoDialogue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -135,7 +141,14 @@ class Inventur_AddItem : Fragment() {
                         knownItemId = db.itemDao()
                             .insertKnownItem(Inventur.KnownItem(0, name, ean.toLong()))
                     }
-                    db.itemDao().insertAddedItem(Inventur.AddedItem(0, knownItemId, bundleVariant, count.toInt()))
+                    db.itemDao().insertAddedItem(
+                        Inventur.AddedItem(
+                            0,
+                            knownItemId,
+                            bundleVariant,
+                            count.toInt()
+                        )
+                    )
 
                     Log.i("DEBUG", name + ean + knownItemId + bundleVariant + count)
 
