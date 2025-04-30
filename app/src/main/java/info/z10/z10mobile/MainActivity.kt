@@ -1,7 +1,9 @@
 package info.z10.z10mobile
 
 import android.app.AlertDialog
+import android.app.Application
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
@@ -9,6 +11,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.room.Room
+import info.z10.z10mobile.Inventur.AppDatabase
 import java.lang.Exception
 import java.text.DecimalFormat
 
@@ -33,7 +37,7 @@ class Money(val value: Double, private val numInt: Int, private val boxInt: Int,
 
         try {
             set(persistingStorage?.getString(this.value.toString(), "")!!.toInt())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             set(0)
         }
     }
@@ -69,14 +73,37 @@ fun formatMoney(double: Double): String {
 
 var money_array = ArrayList<Money>()
 
-class MainActivity : AppCompatActivity() {
+fun infoDialogue(context: Context, text: String): androidx.appcompat.app.AlertDialog {
+    val builder = androidx.appcompat.app.AlertDialog.Builder(context)
 
+    builder.setMessage(text)
+    builder.setTitle("Hinweis")
+    builder.setPositiveButton("Ok", DialogInterface.OnClickListener { _, _ ->})
+    return builder.create()
+}
+
+class DatabaseApplication: Application() {
+    companion object {
+        lateinit var database: AppDatabase
+            private set
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        database = Room.databaseBuilder<AppDatabase>(
+            this, "item-db"
+        ).build()
+    }
+}
+
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val persistingStorage: SharedPreferences? = this.getPreferences(Context.MODE_PRIVATE)
+        val persistingStorage: SharedPreferences? = this.getPreferences(MODE_PRIVATE)
 
         if (persistingStorage?.getBoolean("firstrun", true) == true) {
             showMaintenanceWarning()
