@@ -16,3 +16,6 @@ local.properties
 /app/src/main/res/values/Credentials.xml
 /app/debug/app-debug.apk
 /app/debug/output-metadata.json
+/.idea/AndroidProjectSystem.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/runConfigurations.xml
