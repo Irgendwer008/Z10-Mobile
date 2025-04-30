@@ -2,7 +2,6 @@ package info.z10.z10mobile
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -70,7 +69,7 @@ fun get_article_name_from_ean(context: Context, ean: String, listener: Listener<
     // Request a string response from the provided URL.
     val stringRequest = StringRequest(
         Request.Method.GET, url, listener
-    ) { Log.w("EAN_LOOKUP_RESPONSE", "That didn't work!") }
+    ) {}
 
     // Add the request to the RequestQueue.
     queue.add(stringRequest)

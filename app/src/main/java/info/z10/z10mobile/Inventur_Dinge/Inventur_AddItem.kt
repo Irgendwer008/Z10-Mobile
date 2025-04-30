@@ -1,7 +1,6 @@
 package info.z10.z10mobile.Inventur_Dinge
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,13 +85,10 @@ class Inventur_AddItem : Fragment() {
             lifecycleScope.launch {
                 val text = ean_tv.adapter.getItem(position)
                 try {
-                    Log.d("DEBUG", text.toString().toLong().toString())
                     name_tv.setText(db.itemDao().findKnownItemByEAN(text.toString().toLong()).name)
                 } catch (_: IllegalStateException) {}
             }
         }
-
-        Log.d("TEST", bundleVariants.toTypedArray()[0])
 
         bundleVariant_tv.setAdapter(
             ArrayAdapter<String>(view.context, android.R.layout.select_dialog_item, bundleVariants.toTypedArray())
@@ -142,8 +138,6 @@ class Inventur_AddItem : Fragment() {
         view.findViewById<Button>(R.id.scanbtn).setOnClickListener { runScan() }
 
         fun save(name: String, ean: Long, bundleVariant: String, count: String) {
-
-            Log.d("DEBUG", "Saving: $name; $ean; $bundleVariant; $count; ${count.toInt()}")
             lifecycleScope.launch {
                 try {
                     withContext(Dispatchers.IO) {
@@ -162,9 +156,6 @@ class Inventur_AddItem : Fragment() {
                             knownItemId = db.itemDao().insertKnownItem(Inventur.KnownItem(0, name, ean))
                         }
 
-
-                        Log.d("DEBUG", "KnownItemId: ${knownItemId}")
-
                         try {
                             db.itemDao().insertAddedItem(
                                 Inventur.AddedItem(
@@ -174,9 +165,7 @@ class Inventur_AddItem : Fragment() {
                                     count.toInt()
                                 )
                             )
-                        } catch (e: Exception) {
-                            Log.e("DEBUG", "Failed to insert item 1", e)
-                        }
+                        } catch (_: Exception) { }
 
                         if (isAdded) {
                             withContext(Dispatchers.Main) {
