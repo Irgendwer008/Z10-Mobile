@@ -5,10 +5,13 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -40,6 +43,7 @@ import info.z10.z10mobile.DatabaseApplication.Companion.database as db
 import info.z10.z10mobile.Inventur_Dinge.FileHelper
 import kotlinx.coroutines.launch
 import androidx.navigation.findNavController
+import info.z10.z10mobile.Inventur_Dinge.Inventur_AddItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -120,6 +124,12 @@ class Inventur : Fragment() {
         @Query("SELECT * FROM KnownItem WHERE knownItemId = :knownItemId")
         suspend fun getKnownItem(knownItemId: Long): KnownItem
 
+        @Query("SELECT * FROM KnownItem WHERE name = :name")
+        suspend fun findKnownItemByName(name: String): KnownItem
+
+        @Query("SELECT * FROM KnownItem WHERE ean = :ean")
+        suspend fun findKnownItemByEAN(ean: Long): KnownItem
+
         @Insert
         suspend fun insertKnownItem(knownItem: KnownItem): Long
 
@@ -127,7 +137,10 @@ class Inventur : Fragment() {
         suspend fun insertAddedItem(addedItem: AddedItem): Long
 
         @Delete
-        suspend fun delete(user: KnownItem)
+        suspend fun delete(knownItem: KnownItem)
+
+        @Delete
+        suspend fun delete(addedItem: AddedItem)
 
         @Query("DELETE FROM KnownItem")
         suspend fun deleteAllKnownItems()
@@ -167,9 +180,8 @@ class Inventur : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(layout.fragment_inventur, container, false)
 
-        refresh_table(view)
-
         view.findViewById<Button>(R.id.addItembtn).setOnClickListener{ view.findNavController().navigate(R.id.action_inventur_to_inventur_addItem)}
+        view.findViewById<Button>(R.id.addItemScanbtn).setOnClickListener{ view.findNavController().navigate(InventurDirections.actionInventurToInventurAddItem(true))}
         view.findViewById<Button>(R.id.export_btn).setOnClickListener{
             lifecycleScope.launch {
                 FileHelper().export_db(requireContext(), db)
@@ -196,6 +208,11 @@ class Inventur : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        refresh_table(requireView())
+    }
+
     fun refresh_table(view: View) {
 
         val table = view.findViewById<TableLayout>(R.id.addedItems_tableview)
@@ -204,11 +221,9 @@ class Inventur : Fragment() {
 
         lifecycleScope.launch {
             val addedItems = db.itemDao().getAllAddedItems()
-            Log.i("DEBUG", "Added items: ${addedItems.size}")
 
             for (addedItem in addedItems) {
                 val knownItem = db.itemDao().getKnownItem(addedItem.knownItemId)
-                Log.i("DEBUG", "Name: ${knownItem.name}, EAN: ${knownItem.ean}, KIID: ${knownItem.knownItemId}, Bundle: ${addedItem.bundleVariant}, Count: ${addedItem.count}")
 
                 withContext(Dispatchers.Main) {
                     val row = TableRow(requireContext()).apply {
@@ -218,23 +233,48 @@ class Inventur : Fragment() {
                         )
                     }
 
+                    val buttonSizePx = TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        28f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                    val btn = ImageButton(context).apply {
+                        setImageResource(R.drawable.baseline_delete_outline_24)
+
+                        // Remove background for a cleaner icon-only look (optional)
+                        background = null  // or use setBackgroundColor(Color.TRANSPARENT)
+
+                        layoutParams = TableRow.LayoutParams(buttonSizePx, buttonSizePx)
+
+                        setOnClickListener {
+                            row.removeAllViews()
+                            table.removeView(row)
+                            lifecycleScope.launch {
+                                db.itemDao().delete(addedItem)
+                            }
+                        }
+                        setBackgroundResource(R.drawable.table_border)
+                    }
+                    row.addView(btn)
+
                     row.addView(TextView(requireContext()).apply {
                         text = knownItem.name
                         textSize = 20.0F
                         setBackgroundResource(R.drawable.table_border)
-                        setPadding(10, 5, 5, 5)
+                        setPadding(10, 5, 10, 5)
                     })
                     row.addView(TextView(requireContext()).apply {
                         text = addedItem.bundleVariant
                         textSize = 20.0F
                         setBackgroundResource(R.drawable.table_border)
-                        setPadding(10, 5, 5, 5)
+                        setPadding(10, 5, 10, 5)
                     })
                     row.addView(TextView(requireContext()).apply {
                         text = addedItem.count.toString()
                         textSize = 20.0F
                         setBackgroundResource(R.drawable.table_border)
-                        setPadding(10, 5, 5, 5)
+                        setPadding(10, 5, 10, 5)
                     })
 
                     table.addView(row)

@@ -36,5 +36,10 @@
         android:id="@+id/inventur_addItem"
         android:name="info.z10.z10mobile.Inventur_Dinge.Inventur_AddItem"
         android:label="fragment_inventur"
-        tools:layout="@layout/fragment_inventur_additem" />
+        tools:layout="@layout/fragment_inventur_additem">
+        <argument
+            android:name="triggerScanningImmediately"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
 </navigation>

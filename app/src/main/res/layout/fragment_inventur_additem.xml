@@ -20,25 +20,12 @@
             android:background="?accentColor"
             android:minHeight="50dp">
 
-            <Button
-                android:id="@+id/scanbtn"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                app:icon="@drawable/baseline_barcode_reader_24"
-                app:iconTint="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="#2FFF" />
-
             <TextView
                 android:id="@+id/titletv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="- Inventur"
-                android:textColor="@color/black"
+                android:textColor="?textColor"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:text="Name"
+                android:textColor="?textColor"
                 app:layout_constraintBottom_toBottomOf="@+id/nameAutoCompletetv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/nameAutoCompletetv" />
@@ -85,7 +73,10 @@
                 android:layout_marginStart="76dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:backgroundTint="?accentColor_dark"
                 android:hint="Name"
+                android:textColor="?textColor"
+                android:textColorHint="?accentColor_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/nametv"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -95,6 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="EAN"
+                android:textColor="?textColor"
                 app:layout_constraintBottom_toBottomOf="@+id/eanAutoCompletetv"
                 app:layout_constraintStart_toStartOf="@+id/nametv"
                 app:layout_constraintTop_toTopOf="@+id/eanAutoCompletetv" />
@@ -104,10 +96,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:backgroundTint="?accentColor_dark"
                 android:hint="EAN / UPC / etc."
                 android:inputType="number"
-                app:layout_constraintEnd_toEndOf="@+id/nameAutoCompletetv"
-                app:layout_constraintHorizontal_bias="1.0"
+                android:textColor="?textColor"
+                android:textColorHint="?accentColor_dark"
+                app:layout_constraintEnd_toStartOf="@+id/scanbtn"
                 app:layout_constraintStart_toStartOf="@+id/nameAutoCompletetv"
                 app:layout_constraintTop_toBottomOf="@+id/nameAutoCompletetv" />
 
@@ -116,6 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Einheit"
+                android:textColor="?textColor"
                 app:layout_constraintBottom_toBottomOf="@+id/bundlevariantAutoCompletetv"
                 app:layout_constraintStart_toStartOf="@+id/nametv"
                 app:layout_constraintTop_toTopOf="@+id/bundlevariantAutoCompletetv" />
@@ -125,6 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Anzahl"
+                android:textColor="?textColor"
                 app:layout_constraintBottom_toBottomOf="@+id/countet"
                 app:layout_constraintStart_toStartOf="@+id/nametv"
                 app:layout_constraintTop_toTopOf="@+id/countet" />
@@ -134,36 +130,101 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:backgroundTint="?accentColor_dark"
                 android:hint="Einheit"
+                android:textColor="?textColor"
+                android:textColorHint="?accentColor_dark"
                 app:layout_constraintEnd_toEndOf="@+id/nameAutoCompletetv"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/nameAutoCompletetv"
                 app:layout_constraintTop_toBottomOf="@+id/eanAutoCompletetv" />
-
-            <Button
-                android:id="@+id/continuebtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/accent"
-                android:text="Weiter"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/countet"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:backgroundTint="?accentColor_dark"
                 android:ems="10"
                 android:hint="Anzahl"
                 android:inputType="number"
+                android:textColor="?textColor"
+                android:textColorHint="?accentColor_dark"
                 app:layout_constraintEnd_toEndOf="@+id/bundlevariantAutoCompletetv"
                 app:layout_constraintStart_toStartOf="@+id/bundlevariantAutoCompletetv"
                 app:layout_constraintTop_toBottomOf="@+id/bundlevariantAutoCompletetv" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="40dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/cancelAndBackbtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/accent"
+                    android:text="Abbrechen &amp; Zurück "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/saveAndBackbtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/accent"
+                    android:text="Speichern &amp; Zurück "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cancelAndBackbtn" />
+
+                <Button
+                    android:id="@+id/saveAndNewbtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/accent"
+                    android:text="Speichern &amp; Neu "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/saveAndBackbtn" />
+
+                <Button
+                    android:id="@+id/saveAndScanbtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/accent"
+                    android:text="Speichern &amp; Neu: Scan "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/saveAndNewbtn" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/scanbtn"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                app:icon="@drawable/baseline_barcode_reader_24"
+                app:iconTint="?textColor"
+                app:layout_constraintBottom_toBottomOf="@+id/eanAutoCompletetv"
+                app:layout_constraintEnd_toEndOf="@+id/nameAutoCompletetv"
+                app:layout_constraintTop_toTopOf="@+id/eanAutoCompletetv"
+                app:rippleColor="#2FFF" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RelativeLayout>

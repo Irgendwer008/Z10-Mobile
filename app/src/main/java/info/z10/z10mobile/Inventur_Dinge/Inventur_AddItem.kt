@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import kotlin.properties.Delegates
 import info.z10.z10mobile.DatabaseApplication.Companion.database as db
 
 
@@ -72,6 +73,25 @@ class Inventur_AddItem : Fragment() {
         val bundleVariant_tv = view.findViewById<AutoCompleteTextView>(R.id.bundlevariantAutoCompletetv)
         val count_et = view.findViewById<EditText>(R.id.countet)
 
+        name_tv.setOnItemClickListener { _, _, position, _ ->
+            lifecycleScope.launch {
+                val text = name_tv.adapter.getItem(position)
+                try {
+                    ean_tv.setText(db.itemDao().findKnownItemByName(text.toString()).ean.toString())
+                } catch (_: NullPointerException) {}
+            }
+        }
+
+        ean_tv.setOnItemClickListener { _, _, position, _ ->
+            lifecycleScope.launch {
+                val text = ean_tv.adapter.getItem(position)
+                try {
+                    Log.d("DEBUG", text.toString().toLong().toString())
+                    name_tv.setText(db.itemDao().findKnownItemByEAN(text.toString().toLong()).name)
+                } catch (_: IllegalStateException) {}
+            }
+        }
+
         Log.d("TEST", bundleVariants.toTypedArray()[0])
 
         bundleVariant_tv.setAdapter(
@@ -82,22 +102,26 @@ class Inventur_AddItem : Fragment() {
         setThresholdZero(ean_tv)
         setThresholdZero(bundleVariant_tv)
 
-        view.findViewById<Button>(R.id.scanbtn).setOnClickListener {
+        fun runScan() {
             create_scanner(view.context).startScan()
                 .addOnSuccessListener { barcode ->
-                    val ean_tv = view.findViewById<AutoCompleteTextView>(R.id.eanAutoCompletetv)
                     ean_tv.setText(barcode.displayValue)
-
-                    if (barcode.displayValue?.isNotEmpty() == true && barcode.displayValue?.isNotBlank() == true) {
-                        get_article_name_from_ean(
-                            view.context,
-                            barcode.displayValue.orEmpty()
-                        ) { response ->
+                    if (barcode.displayValue?.isNotBlank() == true) {
+                        lifecycleScope.launch {
                             try {
-                                val json = JSONObject(response) // String instance holding the above json
-                                name_tv.setText(json.getString("title"))
-                            } catch (_: Exception) {
-                                Toast.makeText(this.context, "EAN ${barcode.displayValue} konnte nicht in Onlinedatenbank gefunden werden", Toast.LENGTH_LONG).show()
+                                name_tv.setText(db.itemDao().findKnownItemByEAN(barcode.displayValue!!.toLong()).name)
+                            } catch (_: IllegalStateException) {
+                                get_article_name_from_ean(
+                                    view.context,
+                                    barcode.displayValue.orEmpty()
+                                ) { response ->
+                                    try {
+                                        val json = JSONObject(response)
+                                        name_tv.setText(json.getString("title"))
+                                    } catch (_: Exception) {
+                                        Toast.makeText(requireContext(), "EAN ${barcode.displayValue} konnte nicht in Onlinedatenbank gefunden werden", Toast.LENGTH_LONG).show()
+                                    }
+                                }
                             }
                         }
                     }
@@ -110,7 +134,74 @@ class Inventur_AddItem : Fragment() {
                 }
         }
 
-        view.findViewById<Button>(R.id.continuebtn).setOnClickListener {
+        val args =  Inventur_AddItemArgs.fromBundle(requireArguments())
+        if (args.triggerScanningImmediately) {
+            runScan()
+        }
+
+        view.findViewById<Button>(R.id.scanbtn).setOnClickListener { runScan() }
+
+        fun save(name: String, ean: Long, bundleVariant: String, count: String) {
+
+            Log.d("DEBUG", "Saving: $name; $ean; $bundleVariant; $count; ${count.toInt()}")
+            lifecycleScope.launch {
+                try {
+                    withContext(Dispatchers.IO) {
+                        val already_existing_knownItems = db.itemDao().getAllKnownItems()
+
+                        var knownItemId by Delegates.notNull<Long>()
+                        var existsalready = false
+                        for (item in already_existing_knownItems) {
+                            if ((item.name == name) and (item.ean == ean)) {
+                                existsalready = true
+                                knownItemId = item.knownItemId
+                                break
+                            }
+                        }
+                        if (!existsalready) {
+                            knownItemId = db.itemDao().insertKnownItem(Inventur.KnownItem(0, name, ean))
+                        }
+
+
+                        Log.d("DEBUG", "KnownItemId: ${knownItemId}")
+
+                        try {
+                            db.itemDao().insertAddedItem(
+                                Inventur.AddedItem(
+                                    0,
+                                    knownItemId,
+                                    bundleVariant,
+                                    count.toInt()
+                                )
+                            )
+                        } catch (e: Exception) {
+                            Log.e("DEBUG", "Failed to insert item 1", e)
+                        }
+
+                        if (isAdded) {
+                            withContext(Dispatchers.Main) {
+                                name_tv.text.clear()
+                                ean_tv.text.clear()
+                                bundleVariant_tv.text.clear()
+                                count_et.text.clear()
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                }
+            }
+        }
+
+        fun checkIfExceptionThrows(exceptionCause: Throwable?, blockToTest: () -> Unit = {}): Boolean{
+            try {
+                blockToTest()
+                return false
+            } catch (e: Exception) {
+                return e.cause == exceptionCause
+            }
+        }
+
+        fun checkInputFieldsAndSave(doIfSuccessful: () -> Unit = {}) {
             val name = name_tv.text.toString()
             val ean = ean_tv.text.toString()
             val bundleVariant = bundleVariant_tv.text.toString()
@@ -124,41 +215,30 @@ class Inventur_AddItem : Fragment() {
                 infoDialogue(view.context, "EAN muss mindestens vier Ziffern groß sein").show()
             } else if (count.isBlank()) {
                 infoDialogue(view.context, "Bitte gib eine Anzahl an").show()
+            } else if (checkIfExceptionThrows(NumberFormatException().cause) { ean.toLong() }) {
+                infoDialogue(view.context, "EAN \"$ean\" ist zu groß oder keine Zahl").show()
+            } else if (checkIfExceptionThrows(NumberFormatException().cause) { count.toInt() }) {
+                infoDialogue(view.context, "Anzahl \"$count\" ist zu groß oder keine Zahl").show()
             } else {
-                lifecycleScope.launch {
-                    val already_existing_knownItems = db.itemDao().getAllKnownItems()
+                    save(name, ean.toLong(), bundleVariant, count)
+                    doIfSuccessful()
+            }
+        }
 
-                    var knownItemId: Long = 0
-                    var existsalready = false
-                    for (item in already_existing_knownItems) {
-                        if ((item.name == name) and (item.ean == ean.toLong())) {
-                            existsalready = true
-                            knownItemId = item.knownItemId
-                            break
-                        }
-                    }
-                    if (!existsalready) {
-                        knownItemId = db.itemDao()
-                            .insertKnownItem(Inventur.KnownItem(0, name, ean.toLong()))
-                    }
-                    db.itemDao().insertAddedItem(
-                        Inventur.AddedItem(
-                            0,
-                            knownItemId,
-                            bundleVariant,
-                            count.toInt()
-                        )
-                    )
-
-                    Log.i("DEBUG", name + ean + knownItemId + bundleVariant + count)
-
-                    withContext(Dispatchers.Main) {
-                        name_tv.text.clear()
-                        ean_tv.text.clear()
-                        bundleVariant_tv.text.clear()
-                        count_et.text.clear()
-                    }
-                }
+        view.findViewById<Button>(R.id.cancelAndBackbtn).setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+        view.findViewById<Button>(R.id.saveAndBackbtn).setOnClickListener {
+            checkInputFieldsAndSave {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
+        view.findViewById<Button>(R.id.saveAndNewbtn).setOnClickListener {
+            checkInputFieldsAndSave()
+        }
+        view.findViewById<Button>(R.id.saveAndScanbtn).setOnClickListener {
+            checkInputFieldsAndSave {
+                runScan()
             }
         }
 
