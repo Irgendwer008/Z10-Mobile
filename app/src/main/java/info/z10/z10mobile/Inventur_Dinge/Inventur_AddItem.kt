@@ -187,7 +187,7 @@ class Inventur_AddItem : Fragment() {
                             }
                         }
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }

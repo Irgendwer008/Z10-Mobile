@@ -1,9 +1,7 @@
 package info.z10.z10mobile
 
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -11,24 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.core.view.children
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Delete
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Relation
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.android.volley.Request
 import com.android.volley.Response.Listener
@@ -43,7 +35,6 @@ import info.z10.z10mobile.DatabaseApplication.Companion.database as db
 import info.z10.z10mobile.Inventur_Dinge.FileHelper
 import kotlinx.coroutines.launch
 import androidx.navigation.findNavController
-import info.z10.z10mobile.Inventur_Dinge.Inventur_AddItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -103,16 +94,6 @@ class Inventur : Fragment() {
         val count: Int
     )
 
-    data class KnownItemWithAddedItems(
-        @Embedded val knownItem: KnownItem,
-        @Relation(
-            parentColumn = "knownItemId",
-            entityColumn = "knownItemId"
-        )
-        val addedItems: List<AddedItem>,
-    )
-
-
     @Dao
     interface ItemDao {
         @Query("SELECT * FROM KnownItem")
@@ -153,23 +134,6 @@ class Inventur : Fragment() {
     @Database(entities = [KnownItem::class, AddedItem::class], version = 1)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun itemDao(): ItemDao
-
-        companion object {
-            @Volatile
-            private var INSTANCE: AppDatabase? = null
-
-            fun getDatabase(context: Context): AppDatabase {
-                return INSTANCE ?: synchronized(this) {
-                    val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        AppDatabase::class.java,
-                        "AppDatabase"
-                    ).build()
-                    INSTANCE = instance
-                    instance
-                }
-            }
-        }
     }
 
     override fun onCreateView(
