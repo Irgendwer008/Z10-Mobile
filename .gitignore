@@ -19,3 +19,5 @@ local.properties
 /.idea/AndroidProjectSystem.xml
 /.idea/deploymentTargetSelector.xml
 /.idea/runConfigurations.xml
+/app/debug
+/app/release
