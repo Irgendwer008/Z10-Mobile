@@ -8,8 +8,9 @@
         <item name="accentColor_dark">@color/secondary</item>
         <item name="backgroundColor">@color/background</item>
         <item name="backgroundColor_light">@color/background_light</item>
-        <item name="android:statusBarColor">@color/accent</item>
         <item name="launcherIconBackgroundColor">@color/launcherIconBackgroundColor</item>
         <item name="android:colorAccent">?accentColor</item>
+        <item name="android:statusBarColor">@color/accent</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 </resources>
