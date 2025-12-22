@@ -1,9 +1,8 @@
 package info.z10.z10mobile
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Application
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
@@ -11,7 +10,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.room.Room
 import java.lang.Exception
 import java.text.DecimalFormat
 
@@ -77,11 +75,12 @@ fun infoDialogue(context: Context, text: String): androidx.appcompat.app.AlertDi
 
     builder.setMessage(text)
     builder.setTitle("Hinweis")
-    builder.setPositiveButton("Ok", DialogInterface.OnClickListener { _, _ ->})
+    builder.setPositiveButton("Ok") { _, _ -> }
     return builder.create()
 }
 
 class MainActivity : AppCompatActivity() {
+    @SuppressLint("UseKtx")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
