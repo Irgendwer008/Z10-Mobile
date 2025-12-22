@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Z10Mobile"
         tools:targetApi="31"
-        android:grantUriPermissions="true">
+        android:grantUriPermissions="true"
+        android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
         <activity
             android:name=".MainActivity"
             android:exported="true">

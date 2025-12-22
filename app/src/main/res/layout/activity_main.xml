@@ -10,7 +10,8 @@
     tools:context=".MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?backgroundColor">
+    android:background="?backgroundColor"
+    android:fitsSystemWindows="true">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView4"
