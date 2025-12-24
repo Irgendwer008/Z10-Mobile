@@ -2,7 +2,6 @@ package info.z10.z10mobile
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
@@ -73,15 +72,6 @@ fun formatMoney(double: Double): String {
 }
 
 var money_array = ArrayList<Money>()
-
-fun infoDialogue(context: Context, text: String): androidx.appcompat.app.AlertDialog {
-    val builder = androidx.appcompat.app.AlertDialog.Builder(context)
-
-    builder.setMessage(text)
-    builder.setTitle("Hinweis")
-    builder.setPositiveButton("Ok") { _, _ -> }
-    return builder.create()
-}
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("UseKtx")
