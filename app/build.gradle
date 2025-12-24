@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'info.z10.z10mobile'
-    compileSdk 36
+    compileSdkVersion 36
 
     defaultConfig {
         applicationId "info.z10.z10mobile"
