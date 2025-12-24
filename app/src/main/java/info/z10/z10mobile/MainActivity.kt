@@ -12,6 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import java.lang.Exception
 import java.text.DecimalFormat
+import androidx.activity.enableEdgeToEdge
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColor
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.insets.ColorProtection
+import androidx.core.view.insets.GradientProtection
+import androidx.core.view.insets.ProtectionLayout
 
 
 class Money(val value: Double, private val numInt: Int, private val boxInt: Int, private val persistingStorage: SharedPreferences?){
@@ -84,7 +91,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
         setContentView(R.layout.activity_main)
+
+        findViewById<ProtectionLayout>(R.id.list_protection)
+            .setProtections(
+                listOf(
+                    ColorProtection(
+                        WindowInsetsCompat.Side.TOP,
+                        getColor(R.color.accent)
+                    )
+                )
+            )
 
         val persistingStorage: SharedPreferences? = this.getPreferences(MODE_PRIVATE)
 
