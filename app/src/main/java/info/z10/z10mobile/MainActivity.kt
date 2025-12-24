@@ -13,11 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import java.lang.Exception
 import java.text.DecimalFormat
 import androidx.activity.enableEdgeToEdge
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.toColor
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.insets.ColorProtection
-import androidx.core.view.insets.GradientProtection
 import androidx.core.view.insets.ProtectionLayout
 
 
