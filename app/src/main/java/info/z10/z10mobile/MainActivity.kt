@@ -1,9 +1,7 @@
 package info.z10.z10mobile
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Application
-import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
@@ -11,10 +9,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.room.Room
-import info.z10.z10mobile.Inventur.AppDatabase
 import java.lang.Exception
 import java.text.DecimalFormat
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.insets.ColorProtection
+import androidx.core.view.insets.ProtectionLayout
 
 
 class Money(val value: Double, private val numInt: Int, private val boxInt: Int, private val persistingStorage: SharedPreferences?){
@@ -73,35 +73,24 @@ fun formatMoney(double: Double): String {
 
 var money_array = ArrayList<Money>()
 
-fun infoDialogue(context: Context, text: String): androidx.appcompat.app.AlertDialog {
-    val builder = androidx.appcompat.app.AlertDialog.Builder(context)
-
-    builder.setMessage(text)
-    builder.setTitle("Hinweis")
-    builder.setPositiveButton("Ok", DialogInterface.OnClickListener { _, _ ->})
-    return builder.create()
-}
-
-class DatabaseApplication: Application() {
-    companion object {
-        lateinit var database: AppDatabase
-            private set
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        database = Room.databaseBuilder<AppDatabase>(
-            this, "item-db"
-        ).build()
-    }
-}
-
 class MainActivity : AppCompatActivity() {
+    @SuppressLint("UseKtx")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
         setContentView(R.layout.activity_main)
+
+        findViewById<ProtectionLayout>(R.id.list_protection)
+            .setProtections(
+                listOf(
+                    ColorProtection(
+                        WindowInsetsCompat.Side.TOP,
+                        getColor(R.color.accent)
+                    )
+                )
+            )
 
         val persistingStorage: SharedPreferences? = this.getPreferences(MODE_PRIVATE)
 

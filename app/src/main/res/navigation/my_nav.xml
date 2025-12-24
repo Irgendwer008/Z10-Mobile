@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_home2_to_kassenrechner"
             app:destination="@id/kassenrechner" />
-        <action
-            android:id="@+id/action_home2_to_inventur"
-            app:destination="@id/inventur" />
     </fragment>
 
     <fragment
@@ -23,23 +20,4 @@
         android:name="info.z10.z10mobile.Kassenrechner"
         android:label="fragment_kassenrechner"
         tools:layout="@layout/fragment_kassenrechner" />
-    <fragment
-        android:id="@+id/inventur"
-        android:name="info.z10.z10mobile.Inventur"
-        android:label="fragment_inventur"
-        tools:layout="@layout/fragment_inventur" >
-        <action
-            android:id="@+id/action_inventur_to_inventur_addItem"
-            app:destination="@id/inventur_addItem" />
-    </fragment>
-    <fragment
-        android:id="@+id/inventur_addItem"
-        android:name="info.z10.z10mobile.Inventur_Dinge.Inventur_AddItem"
-        android:label="fragment_inventur"
-        tools:layout="@layout/fragment_inventur_additem">
-        <argument
-            android:name="triggerScanningImmediately"
-            app:argType="boolean"
-            android:defaultValue="false" />
-    </fragment>
 </navigation>
